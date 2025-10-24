@@ -1,0 +1,83 @@
+<!-- templates/student/dashboard.html -->
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Student Dashboard</h2>
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Student ID</h5>
+                        <p class="card-text h4">{{ student.student_id }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Program</h5>
+                        <p class="card-text">{{ student.program }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Year & Semester</h5>
+                        <p class="card-text">Year {{ student.year_of_study }} - Semester {{ student.semester }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Registered Courses</h5>
+                        <p class="card-text h4">{{ student.registered_courses|length }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('student.registration') }}" class="btn btn-outline-primary">Course Registration</a>
+                            <a href="{{ url_for('student.payments') }}" class="btn btn-outline-success">Make Payment</a>
+                            <a href="{{ url_for('student.results') }}" class="btn btn-outline-info">View Results</a>
+                            <a href="{{ url_for('student.dockets') }}" class="btn btn-outline-warning">Exam Dockets</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Recent Payments</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if student.payments %}
+                            {% for payment in student.payments[-3:]|reverse %}
+                                <div class="border-bottom py-2">
+                                    <strong>K{{ "%.2f"|format(payment.amount) }}</strong> - {{ payment.payment_type }}<br>
+                                    <small class="text-muted">{{ payment.created_at.strftime('%Y-%m-%d') }}</small>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No payments made yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

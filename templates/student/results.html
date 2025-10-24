@@ -1,0 +1,54 @@
+<!-- templates/student/results.html -->
+{% extends "base.html" %}
+
+{% block title %}Academic Results{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Academic Results</h2>
+        <div class="card">
+            <div class="card-body">
+                {% if results %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                                <th>CAT 1</th>
+                                <th>CAT 2</th>
+                                <th>Final Exam</th>
+                                <th>Total</th>
+                                <th>Grade</th>
+                                <th>Grade Point</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                            <tr>
+                                <td>{{ result.course.course_code }}</td>
+                                <td>{{ result.course.course_name }}</td>
+                                <td>{{ "%.1f"|format(result.cat1_marks) }}</td>
+                                <td>{{ "%.1f"|format(result.cat2_marks) }}</td>
+                                <td>{{ "%.1f"|format(result.final_exam_marks) }}</td>
+                                <td><strong>{{ "%.1f"|format(result.total_marks) }}</strong></td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if result.grade in ['A','B','C'] else 'warning' if result.grade == 'D' else 'danger' }}">
+                                        {{ result.grade }}
+                                    </span>
+                                </td>
+                                <td>{{ "%.1f"|format(result.grade_point) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No results published yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

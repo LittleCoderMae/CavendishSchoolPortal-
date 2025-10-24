@@ -1,0 +1,81 @@
+<!-- templates/student/payments.html -->
+{% extends "base.html" %}
+
+{% block title %}Payments{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h2>Payment History</h2>
+        <div class="card">
+            <div class="card-body">
+                {% if payments %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Transaction ID</th>
+                                <th>Type</th>
+                                <th>Amount (K)</th>
+                                <th>Method</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in payments %}
+                            <tr>
+                                <td>{{ payment.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ payment.transaction_id }}</td>
+                                <td>{{ payment.payment_type|replace('_', ' ')|title }}</td>
+                                <td>{{ "%.2f"|format(payment.amount) }}</td>
+                                <td>{{ payment.payment_method|replace('_', ' ')|title }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if payment.status == 'completed' else 'warning' }}">
+                                        {{ payment.status|title }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No payment history found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <h2>Make Payment</h2>
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('payment.make_payment') }}">
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount (K)</label>
+                        <input type="number" class="form-control" id="amount" name="amount" step="0.01" min="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="payment_type" class="form-label">Payment Type</label>
+                        <select class="form-control" id="payment_type" name="payment_type" required>
+                            <option value="tuition">Tuition Fees</option>
+                            <option value="module_registration">Module Registration</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="payment_method" class="form-label">Payment Method</label>
+                        <select class="form-control" id="payment_method" name="payment_method" required>
+                            <option value="mobile_money">Mobile Money</option>
+                            <option value="bank_transfer">Bank Transfer</option>
+                            <option value="cash">Cash</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Make Payment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

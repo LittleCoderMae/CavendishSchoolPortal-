@@ -1,0 +1,44 @@
+<!-- templates/lecturer/dashboard.html -->
+{% extends "base.html" %}
+
+{% block title %}Lecturer Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Lecturer Dashboard</h2>
+        <div class="card">
+            <div class="card-body">
+                <p>Welcome to the Lecturer Dashboard. Here you can manage student results and view academic information.</p>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Quick Actions</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    <a href="{{ url_for('lecturer.results') }}" class="btn btn-outline-primary">Manage Results</a>
+                                    <button class="btn btn-outline-success">Upload Marks</button>
+                                    <button class="btn btn-outline-info">View Students</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Recent Activities</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted">No recent activities.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
