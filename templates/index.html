@@ -1,7 +1,7 @@
 <!-- templates/index.html -->
 {% extends "base.html" %}
 
-{% block title %}Home - Cavendish School Portal{% endblock %}
+{% block title %}Home - CUZ Management Portal{% endblock %}
 
 {% block content %}
 <style>
@@ -16,7 +16,8 @@
     }
     
     .hero-section {
-        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+        background:  linear-gradient(rgba(18, 96, 174, 0.8), rgba(52, 152, 219, 0.7)), 
+        url("/static/images/cuz5.jpg") center/cover no-repeat;
         color: white;
         padding: 100px 0;
         text-align: center;
@@ -376,8 +377,9 @@
 
     <div class="hero-section">
         <div class="container">
-            <h1>Welcome to Cavendish School Portal</h1>
-            <p>Your Gateway to Seamless Academic Management and Success</p>
+            <h1>Welcome to CUZ Management Portal</h1>
+            <p>Your Gateway to Seamless Academic Management and Success.<b>
+            And remember success begins at Cavendish!</p>
             <div class="auth-buttons">
                 <a href="/auth/login" class="btn btn-primary">
                     <i class="fas fa-sign-in-alt"></i>
@@ -456,7 +458,7 @@
         </div>
 
         <div class="portal-cards">
-            <!-- Student Portal -->
+            <!-- Student Portal, eish these chaps are so unserious lol -->
             <div class="portal-card">
                 <h3><i class="fas fa-user-graduate"></i>Student Portal</h3>
                 <ul class="card-links">
@@ -468,7 +470,7 @@
                 </ul>
             </div>
 
-            <!-- Admin Portal -->
+            <!-- Admin Portal, ati this is where the admin uploads your zeros lol  -->
             <div class="portal-card">
                 <h3><i class="fas fa-users-cog"></i>Admin Portal</h3>
                 <ul class="card-links">
@@ -480,7 +482,7 @@
                 </ul>
             </div>
 
-            <!-- Payment System -->
+            <!-- Payment System, money is scarce nowadays so ba admin needs to relax lol -->
             <div class="portal-card">
                 <h3><i class="fas fa-credit-card"></i>Payment System</h3>
                 <ul class="card-links">
@@ -491,7 +493,7 @@
                 </ul>
             </div>
 
-            <!-- Results System -->
+            <!-- Results System, bally aint gonna be happy with your ressults mahn! lol -->
             <div class="portal-card">
                 <h3><i class="fas fa-chart-bar"></i>Results System</h3>
                 <ul class="card-links">
