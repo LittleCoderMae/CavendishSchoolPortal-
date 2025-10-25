@@ -1,3 +1,4 @@
+<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -159,11 +160,10 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                <img src="{{ url_for('static', filename='images/logo1.jpg') }}" alt="Cavendish School Logo">
+            <a class="navbar-brand" href="/">
+                <img src="/static/images/logo1.jpg" alt="Cavendish School Logo">
                 <span>Cavendish School</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -178,30 +178,29 @@
                             </span>
                         </li>
                         {% if current_user.role == 'student' %}
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('student.dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('student.registration') }}"><i class="fas fa-clipboard-list me-1"></i> Course Registration</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('student.payments') }}"><i class="fas fa-credit-card me-1"></i> Payments</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('student.results') }}"><i class="fas fa-chart-line me-1"></i> Results</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('student.dockets') }}"><i class="fas fa-file-alt me-1"></i> Exam Dockets</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/student/dashboard"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/student/registration"><i class="fas fa-clipboard-list me-1"></i> Course Registration</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/student/payments"><i class="fas fa-credit-card me-1"></i> Payments</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/student/results"><i class="fas fa-chart-line me-1"></i> Results</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/student/dockets"><i class="fas fa-file-alt me-1"></i> Exam Dockets</a></li>
                         {% elif current_user.role == 'admin' %}
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.students') }}"><i class="fas fa-users me-1"></i> Students</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.payments') }}"><i class="fas fa-credit-card me-1"></i> Payments</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/admin/students"><i class="fas fa-users me-1"></i> Students</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/admin/payments"><i class="fas fa-credit-card me-1"></i> Payments</a></li>
                         {% elif current_user.role == 'lecturer' %}
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('lecturer.dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('lecturer.results') }}"><i class="fas fa-chart-line me-1"></i> Results</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/lecturer/dashboard"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/lecturer/results"><i class="fas fa-chart-line me-1"></i> Results</a></li>
                         {% endif %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/auth/logout"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
                     {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in-alt me-1"></i> Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}"><i class="fas fa-user-plus me-1"></i> Register</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/auth/login"><i class="fas fa-sign-in-alt me-1"></i> Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/auth/register"><i class="fas fa-user-plus me-1"></i> Register</a></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
     <div class="main-content">
         <div class="container mt-4">
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -220,7 +219,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="row">
@@ -237,18 +235,18 @@
                 <div class="col-md-2 mb-4">
                     <h5>Quick Links</h5>
                     <div class="footer-links">
-                        <a href="{{ url_for('index') }}">Home</a>
+                        <a href="/">Home</a>
                         {% if current_user.is_authenticated %}
                             {% if current_user.role == 'student' %}
-                                <a href="{{ url_for('student.dashboard') }}">Student Portal</a>
+                                <a href="/student/dashboard">Student Portal</a>
                             {% elif current_user.role == 'admin' %}
-                                <a href="{{ url_for('admin.dashboard') }}">Admin Portal</a>
+                                <a href="/admin/dashboard">Admin Portal</a>
                             {% elif current_user.role == 'lecturer' %}
-                                <a href="{{ url_for('lecturer.dashboard') }}">Lecturer Portal</a>
+                                <a href="/lecturer/dashboard">Lecturer Portal</a>
                             {% endif %}
                         {% else %}
-                            <a href="{{ url_for('auth.login') }}">Login</a>
-                            <a href="{{ url_for('auth.register') }}">Register</a>
+                            <a href="/auth/login">Login</a>
+                            <a href="/auth/register">Register</a>
                         {% endif %}
                         <a href="#">Academic Calendar</a>
                         <a href="#">Library</a>
@@ -289,7 +287,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="/static/js/main.js"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

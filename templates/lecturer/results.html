@@ -1,63 +1,16 @@
-<!-- templates/lecturer/results.html -->
 {% extends "base.html" %}
 
-{% block title %}Manage Results{% endblock %}
+{% block title %}Results Management{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2>Manage Student Results</h2>
-        <div class="card">
-            <div class="card-body">
-                {% if results %}
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Student ID</th>
-                                <th>Course</th>
-                                <th>CAT 1</th>
-                                <th>CAT 2</th>
-                                <th>Final Exam</th>
-                                <th>Total</th>
-                                <th>Grade</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for result in results %}
-                            <tr>
-                                <td>{{ result.student.student_id }}</td>
-                                <td>{{ result.course.course_code }}</td>
-                                <td>{{ "%.1f"|format(result.cat1_marks) }}</td>
-                                <td>{{ "%.1f"|format(result.cat2_marks) }}</td>
-                                <td>{{ "%.1f"|format(result.final_exam_marks) }}</td>
-                                <td><strong>{{ "%.1f"|format(result.total_marks) }}</strong></td>
-                                <td>
-                                    <span class="badge bg-{{ 'success' if result.grade in ['A','B','C'] else 'warning' if result.grade == 'D' else 'danger' }}">
-                                        {{ result.grade }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-{{ 'success' if result.is_published else 'secondary' }}">
-                                        {{ 'Published' if result.is_published else 'Draft' }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning">Edit</button>
-                                    <button class="btn btn-sm btn-{{ 'secondary' if result.is_published else 'success' }}">
-                                        {{ 'Unpublish' if result.is_published else 'Publish' }}
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">Results Management</h1>
+            <div class="card">
+                <div class="card-body">
+                    <p>Results entry and management system coming soon...</p>
                 </div>
-                {% else %}
-                <p class="text-muted">No results found.</p>
-                {% endif %}
             </div>
         </div>
     </div>

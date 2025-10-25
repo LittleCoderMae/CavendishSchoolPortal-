@@ -1,84 +1,761 @@
-<!-- templates/auth/register.html -->
-{% extends "base.html" %}
-
-{% block title %}Register{% endblock %}
-
-{% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title mb-0">Create New Account</h4>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Cavendish School Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #2c3e50;
+            --secondary-blue: #3498db;
+            --accent-blue: #2980b9;
+            --light-blue: #ecf0f1;
+            --success-green: #27ae60;
+            --warning-orange: #f39c12;
+            --gradient: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --radius: 15px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .register-container {
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            min-height: 700px;
+        }
+        
+        .register-left {
+            flex: 1;
+            background: var(--gradient);
+            color: white;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .register-left::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .register-left::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+            background: rgba(255,255,255,0.2);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .welcome-text {
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-text h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+        
+        .welcome-text p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .features {
+            list-style: none;
+            margin-top: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .features li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        
+        .features i {
+            margin-right: 15px;
+            background: rgba(255,255,255,0.2);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        
+        .register-right {
+            flex: 1.2;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+            max-height: 700px;
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .register-header h2 {
+            color: var(--primary-blue);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .register-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 1.1rem;
+        }
+        
+        .input-with-icon input,
+        .input-with-icon select {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .input-with-icon input:focus,
+        .input-with-icon select:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
+            outline: none;
+        }
+        
+        .password-strength {
+            margin-top: 8px;
+            height: 5px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .password-strength-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .strength-weak {
+            background: #e74c3c;
+            width: 25%;
+        }
+        
+        .strength-medium {
+            background: #f39c12;
+            width: 50%;
+        }
+        
+        .strength-strong {
+            background: #27ae60;
+            width: 75%;
+        }
+        
+        .strength-very-strong {
+            background: #2ecc71;
+            width: 100%;
+        }
+        
+        .password-requirements {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .requirement i {
+            margin-right: 8px;
+            font-size: 0.8rem;
+        }
+        
+        .requirement.met {
+            color: var(--success-green);
+        }
+        
+        .requirement.unmet {
+            color: #999;
+        }
+        
+        .terms-group {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+        
+        .terms-group input {
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+        
+        .terms-group label {
+            font-size: 0.95rem;
+            color: #666;
+            font-weight: normal;
+            line-height: 1.5;
+        }
+        
+        .terms-group a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .terms-group a:hover {
+            text-decoration: underline;
+        }
+        
+        .btn-register {
+            width: 100%;
+            padding: 15px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-register:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(44, 62, 80, 0.3);
+        }
+        
+        .btn-register:active {
+            transform: translateY(-1px);
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+            color: #999;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e0e0e0;
+        }
+        
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+        
+        .login-link a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 5px;
+            transition: color 0.3s;
+        }
+        
+        .login-link a:hover {
+            color: var(--primary-blue);
+            text-decoration: underline;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .back-link:hover {
+            color: var(--primary-blue);
+        }
+        
+        .role-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .role-option {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .role-option:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+        }
+        
+        .role-option.selected {
+            border-color: var(--accent-blue);
+            background: var(--light-blue);
+        }
+        
+        .role-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary-blue);
+        }
+        
+        .role-name {
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+        
+        .role-desc {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        @media (max-width: 968px) {
+            .register-container {
+                flex-direction: column;
+                max-width: 600px;
+            }
+            
+            .register-left, .register-right {
+                padding: 40px 30px;
+            }
+            
+            .register-left {
+                text-align: center;
+            }
+            
+            .features li {
+                justify-content: center;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .role-options {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Animation for form elements */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .register-right > * {
+            animation: fadeIn 0.6s ease forwards;
+        }
+        
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .role-options { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        .terms-group { animation-delay: 0.6s; }
+        .btn-register { animation-delay: 0.7s; }
+        .divider { animation-delay: 0.8s; }
+        .login-link { animation-delay: 0.9s; }
+        .back-link { animation-delay: 1s; }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <!-- Left Side - Branding & Info -->
+        <div class="register-left">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">Cavendish</div>
             </div>
-            <div class="card-body">
-                <form method="POST" action="{{ url_for('auth.register') }}">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>Account Information</h5>
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" name="username" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="confirm_password" class="form-label">Confirm Password</label>
-                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="role" class="form-label">Role</label>
-                                <select class="form-control" id="role" name="role" required>
-                                    <option value="student">Student</option>
-                                    <option value="lecturer">Lecturer</option>
-                                    <option value="admin">Admin</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Student Information (Required for Student Registration)</h5>
-                            <div class="mb-3">
-                                <label for="first_name" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="first_name" name="first_name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="last_name" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="last_name" name="last_name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="program" class="form-label">Program</label>
-                                <input type="text" class="form-control" id="program" name="program">
-                            </div>
-                            <div class="mb-3">
-                                <label for="year_of_study" class="form-label">Year of Study</label>
-                                <select class="form-control" id="year_of_study" name="year_of_study">
-                                    <option value="1">Year 1</option>
-                                    <option value="2">Year 2</option>
-                                    <option value="3">Year 3</option>
-                                    <option value="4">Year 4</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="semester" class="form-label">Semester</label>
-                                <select class="form-control" id="semester" name="semester">
-                                    <option value="1">Semester 1</option>
-                                    <option value="2">Semester 2</option>
-                                </select>
-                            </div>
+            
+            <div class="welcome-text">
+                <h1>Join Our Community!</h1>
+                <p>Create your Cavendish School Portal account and unlock access to personalized educational resources, progress tracking, and seamless communication.</p>
+            </div>
+            
+            <ul class="features">
+                <li><i class="fas fa-shield-alt"></i> Secure & Private Account</li>
+                <li><i class="fas fa-bolt"></i> Instant Access to Resources</li>
+                <li><i class="fas fa-chart-line"></i> Track Your Academic Progress</li>
+                <li><i class="fas fa-users"></i> Connect with Faculty & Peers</li>
+                <li><i class="fas fa-clock"></i> 24/7 Access to Learning Materials</li>
+            </ul>
+        </div>
+        
+        <!-- Right Side - Registration Form -->
+        <div class="register-right">
+            <div class="register-header">
+                <h2>Create Your Account</h2>
+                <p>Join thousands of students and faculty members</p>
+            </div>
+            
+            <form id="registrationForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="firstName" placeholder="Enter your first name" required>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
-                </form>
-                <div class="text-center mt-3">
-                    <p>Already have an account? <a href="{{ url_for('auth.login') }}">Login here</a></p>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="lastName" placeholder="Enter your last name" required>
+                        </div>
+                    </div>
                 </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" placeholder="Enter your email address" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Select Your Role</label>
+                    <div class="role-options">
+                        <div class="role-option" data-role="student">
+                            <div class="role-icon">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <div class="role-name">Student</div>
+                            <div class="role-desc">Access courses, grades, and resources</div>
+                        </div>
+                        <div class="role-option" data-role="lecturer">
+                            <div class="role-icon">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                            </div>
+                            <div class="role-name">Lecturer</div>
+                            <div class="role-desc">Manage courses and student progress</div>
+                        </div>
+                        <div class="role-option" data-role="admin">
+                            <div class="role-icon">
+                                <i class="fas fa-users-cog"></i>
+                            </div>
+                            <div class="role-name">Administrator</div>
+                            <div class="role-desc">System management and oversight</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="role" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="Create a strong password" required>
+                    </div>
+                    <div class="password-strength">
+                        <div class="password-strength-fill" id="passwordStrength"></div>
+                    </div>
+                    <div class="password-requirements">
+                        <div class="requirement unmet" id="lengthReq">
+                            <i class="fas fa-circle"></i> At least 8 characters
+                        </div>
+                        <div class="requirement unmet" id="upperReq">
+                            <i class="fas fa-circle"></i> One uppercase letter
+                        </div>
+                        <div class="requirement unmet" id="lowerReq">
+                            <i class="fas fa-circle"></i> One lowercase letter
+                        </div>
+                        <div class="requirement unmet" id="numberReq">
+                            <i class="fas fa-circle"></i> One number
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirmPassword" placeholder="Re-enter your password" required>
+                    </div>
+                    <div id="passwordMatch" style="margin-top: 8px; font-size: 0.85rem; display: none;"></div>
+                </div>
+                
+                <div class="terms-group">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">
+                        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. 
+                        I understand that my account will be verified before gaining full access to the portal.
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn-register">
+                    <i class="fas fa-user-plus"></i>
+                    Create Account
+                </button>
+            </form>
+            
+            <div class="login-link">
+                Already have an account? <a href="/auth/login">Sign in here</a>
             </div>
+            
+            <a href="/" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to Homepage
+            </a>
         </div>
     </div>
-</div>
-{% endblock %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registrationForm');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const passwordStrength = document.getElementById('passwordStrength');
+            const passwordMatch = document.getElementById('passwordMatch');
+            const roleOptions = document.querySelectorAll('.role-option');
+            const roleInput = document.getElementById('role');
+            
+            // Role selection
+            roleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    roleOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    roleInput.value = this.getAttribute('data-role');
+                });
+            });
+            
+            // Password strength checker
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                
+                // Check password requirements
+                const hasLength = password.length >= 8;
+                const hasUpper = /[A-Z]/.test(password);
+                const hasLower = /[a-z]/.test(password);
+                const hasNumber = /[0-9]/.test(password);
+                
+                // Update requirement indicators
+                document.getElementById('lengthReq').className = hasLength ? 'requirement met' : 'requirement unmet';
+                document.getElementById('upperReq').className = hasUpper ? 'requirement met' : 'requirement unmet';
+                document.getElementById('lowerReq').className = hasLower ? 'requirement met' : 'requirement unmet';
+                document.getElementById('numberReq').className = hasNumber ? 'requirement met' : 'requirement unmet';
+                
+                // Calculate strength
+                if (hasLength) strength++;
+                if (hasUpper) strength++;
+                if (hasLower) strength++;
+                if (hasNumber) strength++;
+                
+                // Update strength meter
+                passwordStrength.className = 'password-strength-fill';
+                if (strength === 0) {
+                    passwordStrength.style.width = '0%';
+                } else if (strength === 1) {
+                    passwordStrength.classList.add('strength-weak');
+                } else if (strength === 2) {
+                    passwordStrength.classList.add('strength-medium');
+                } else if (strength === 3) {
+                    passwordStrength.classList.add('strength-strong');
+                } else if (strength === 4) {
+                    passwordStrength.classList.add('strength-very-strong');
+                }
+            });
+            
+            // Password confirmation check
+            confirmPasswordInput.addEventListener('input', function() {
+                const password = passwordInput.value;
+                const confirmPassword = this.value;
+                
+                if (confirmPassword === '') {
+                    passwordMatch.style.display = 'none';
+                    return;
+                }
+                
+                passwordMatch.style.display = 'block';
+                
+                if (password === confirmPassword) {
+                    passwordMatch.innerHTML = '<i class="fas fa-check-circle" style="color: #27ae60;"></i> Passwords match';
+                    passwordMatch.style.color = '#27ae60';
+                } else {
+                    passwordMatch.innerHTML = '<i class="fas fa-times-circle" style="color: #e74c3c;"></i> Passwords do not match';
+                    passwordMatch.style.color = '#e74c3c';
+                }
+            });
+            
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate form
+                if (!roleInput.value) {
+                    alert('Please select your role');
+                    return;
+                }
+                
+                if (passwordInput.value !== confirmPasswordInput.value) {
+                    alert('Passwords do not match');
+                    return;
+                }
+                
+                // Show loading state
+                const btn = document.querySelector('.btn-register');
+                const originalText = btn.innerHTML;
+                
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+                btn.disabled = true;
+                
+                // Simulate API call
+                setTimeout(() => {
+                    alert('Account created successfully! Please check your email for verification.');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    
+                    // In a real app, you would redirect here
+                    // window.location.href = '/auth/verify-email';
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

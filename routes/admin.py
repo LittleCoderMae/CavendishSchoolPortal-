@@ -1,5 +1,5 @@
 # routes/admin.py
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
 
 admin_bp = Blueprint('admin', __name__)
@@ -34,3 +34,12 @@ def payments():
     from models.payment import Payment
     all_payments = Payment.query.all()
     return render_template('admin/payments.html', payments=all_payments)
+
+@admin_bp.route('/courses')
+@login_required  # Add this decorator for consistency
+def courses():
+    if current_user.role != 'admin':
+        flash('Access denied', 'error')
+        return redirect(url_for('auth.login'))
+    
+    return render_template('admin/courses.html')

@@ -10,6 +10,14 @@ from config import app_config
 # Import database components
 from database.database import db, login_manager
 
+# Import blueprints
+from routes.auth import auth_bp
+from routes.student import student_bp
+from routes.admin import admin_bp
+from routes.payment import payment_bp
+from routes.results import results_bp
+from lecturer import lecturer_bp  # Make sure this file exists
+
 def create_app(config_name='default'):
     app = Flask(__name__)
     app.config.from_object(app_config[config_name])
@@ -39,12 +47,7 @@ def create_app(config_name='default'):
         print("✓ Database tables created!")
     
     # Register blueprints
-    from routes.auth import auth_bp
-    from routes.student import student_bp
-    from routes.admin import admin_bp
-    from routes.payment import payment_bp
-    from routes.results import results_bp
-    
+    app.register_blueprint(lecturer_bp)
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(student_bp, url_prefix='/student')
     app.register_blueprint(admin_bp, url_prefix='/admin')
@@ -54,6 +57,10 @@ def create_app(config_name='default'):
     @app.route('/')
     def index():
         return render_template('index.html')
+    
+    @app.route('/admin/courses')
+    def admin_courses():
+        return render_template('admin/courses.html')
     
     @app.errorhandler(404)
     def not_found_error(error):
