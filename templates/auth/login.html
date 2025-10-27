@@ -15,8 +15,7 @@
             --gradient: linear-gradient(135deg, #2c3e50 0%, #07103d 100%);
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             --radius: 15px;
-}
-        
+        }
         
         * {
             margin: 0;
@@ -197,7 +196,7 @@
             font-size: 1.1rem;
         }
         
-        .input-with-icon input {
+        .input-with-icon input, .input-with-icon select {
             width: 100%;
             padding: 15px 15px 15px 50px;
             border: 2px solid #e0e0e0;
@@ -206,7 +205,7 @@
             transition: all 0.3s ease;
         }
         
-        .input-with-icon input:focus {
+        .input-with-icon input:focus, .input-with-icon select:focus {
             border-color: var(--accent-blue);
             box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
             outline: none;
@@ -363,6 +362,39 @@
             color: var(--primary-blue);
         }
         
+        /* Role-specific styles */
+        .role-info {
+            margin-top: 5px;
+            font-size: 0.85rem;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .demo-credentials {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .demo-credentials h4 {
+            margin-bottom: 10px;
+            color: var(--primary-blue);
+        }
+        
+        .demo-role {
+            margin-bottom: 10px;
+        }
+        
+        .demo-role:last-child {
+            margin-bottom: 0;
+        }
+        
+        .demo-role strong {
+            color: var(--accent-blue);
+        }
+        
         @media (max-width: 768px) {
             .login-container {
                 flex-direction: column;
@@ -398,12 +430,14 @@
         
         .form-group:nth-child(1) { animation-delay: 0.1s; }
         .form-group:nth-child(2) { animation-delay: 0.2s; }
-        .remember-forgot { animation-delay: 0.3s; }
-        .btn-login { animation-delay: 0.4s; }
-        .divider { animation-delay: 0.5s; }
-        .social-login { animation-delay: 0.6s; }
-        .register-link { animation-delay: 0.7s; }
-        .back-link { animation-delay: 0.8s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .remember-forgot { animation-delay: 0.4s; }
+        .btn-login { animation-delay: 0.5s; }
+        .divider { animation-delay: 0.6s; }
+        .social-login { animation-delay: 0.7s; }
+        .register-link { animation-delay: 0.8s; }
+        .back-link { animation-delay: 0.9s; }
+        .demo-credentials { animation-delay: 1s; }
     </style>
 </head>
 <body>
@@ -437,12 +471,12 @@
                 <p>Enter your credentials to access the portal</p>
             </div>
             
-            <form>
+            <form id="loginForm" action="{{ url_for('auth.login') }}" method="POST">
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <div class="input-with-icon">
                         <i class="fas fa-envelope"></i>
-                        <input type="email" id="email" placeholder="Enter your email address" required>
+                        <input type="email" id="email" name="email" placeholder="Enter your email address" required>
                     </div>
                 </div>
                 
@@ -450,13 +484,27 @@
                     <label for="password">Password</label>
                     <div class="input-with-icon">
                         <i class="fas fa-lock"></i>
-                        <input type="password" id="password" placeholder="Enter your password" required>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
                     </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="role">Login As</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user-tag"></i>
+                        <select id="role" name="role" required>
+                            <option value="">Select your role</option>
+                            <option value="student">Student</option>
+                            <option value="lecturer">Lecturer</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="role-info">Select your role to access the appropriate dashboard</div>
                 </div>
                 
                 <div class="remember-forgot">
                     <div class="remember-me">
-                        <input type="checkbox" id="remember">
+                        <input type="checkbox" id="remember" name="remember">
                         <label for="remember">Remember me</label>
                     </div>
                     <a href="/auth/forgot-password" class="forgot-password">Forgot Password?</a>
@@ -467,6 +515,19 @@
                     Login to Portal
                 </button>
             </form>
+            
+            <div class="demo-credentials">
+                <h4>Demo Credentials:</h4>
+                <div class="demo-role">
+                    <strong>Student:</strong> student@cuz.ac.zm / password123
+                </div>
+                <div class="demo-role">
+                    <strong>Lecturer:</strong> lecturer@cuz.ac.zm / password123
+                </div>
+                <div class="demo-role">
+                    <strong>Admin:</strong> admin@cuz.ac.zm / password123
+                </div>
+            </div>
             
             <div class="divider">
                 <span>Or continue with</span>
@@ -495,14 +556,14 @@
     </div>
 
     <script>
-        // Simple form validation and enhancement
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.querySelector('form');
+            const form = document.getElementById('loginForm');
             const emailInput = document.getElementById('email');
             const passwordInput = document.getElementById('password');
+            const roleSelect = document.getElementById('role');
             
             // Add focus effects
-            const inputs = document.querySelectorAll('input');
+            const inputs = document.querySelectorAll('input, select');
             inputs.forEach(input => {
                 input.addEventListener('focus', function() {
                     this.parentElement.parentElement.classList.add('focused');
@@ -513,33 +574,68 @@
                 });
             });
             
-            // Form submission
+            // Pre-fill demo credentials based on role selection
+            roleSelect.addEventListener('change', function() {
+                const role = this.value;
+                if (role === 'student') {
+                    emailInput.value = 'student@cuz.ac.zm';
+                    passwordInput.value = 'password123';
+                } else if (role === 'lecturer') {
+                    emailInput.value = 'lecturer@cuz.ac.zm';
+                    passwordInput.value = 'password123';
+                } else if (role === 'admin') {
+                    emailInput.value = 'admin@cuz.ac.zm';
+                    passwordInput.value = 'password123';
+                } else {
+                    emailInput.value = '';
+                    passwordInput.value = '';
+                }
+            });
+            
+            // Form submission - using actual form submission instead of AJAX
+            // This will work with your Flask backend
             form.addEventListener('submit', function(e) {
-                e.preventDefault();
+                const email = emailInput.value;
+                const password = passwordInput.value;
+                const role = roleSelect.value;
                 
                 // Simple validation
-                if (!emailInput.value || !passwordInput.value) {
+                if (!email || !password || !role) {
+                    e.preventDefault();
                     alert('Please fill in all fields');
                     return;
                 }
                 
-                // Here you would typically send the data to your server
-                // For demo purposes, we'll just show a success message
+                // Show loading state
                 const btn = document.querySelector('.btn-login');
                 const originalText = btn.innerHTML;
-                
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
                 btn.disabled = true;
                 
-                // Simulate API call
-                setTimeout(() => {
-                    alert('Login successful! Redirecting to dashboard...');
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    // In a real app, you would redirect here
-                    // window.location.href = '/dashboard';
-                }, 1500);
+                // Let the form submit naturally to Flask
+                // Flask will handle the authentication and redirect
             });
+            
+            // For demo purposes only - remove this in production
+            // This allows the demo credentials to work without backend
+            const urlParams = new URLSearchParams(window.location.search);
+            const demo = urlParams.get('demo');
+            if (demo) {
+                // Auto-fill demo credentials based on URL parameter
+                if (demo === 'student') {
+                    roleSelect.value = 'student';
+                    emailInput.value = 'student@cuz.ac.zm';
+                    passwordInput.value = 'password123';
+                } else if (demo === 'lecturer') {
+                    roleSelect.value = 'lecturer';
+                    emailInput.value = 'lecturer@cuz.ac.zm';
+                    passwordInput.value = 'password123';
+                } else if (demo === 'admin') {
+                    roleSelect.value = 'admin';
+                    emailInput.value = 'admin@cuz.ac.zm';
+                    passwordInput.value = 'password123';
+                }
+            }
         });
     </script>
 </body>

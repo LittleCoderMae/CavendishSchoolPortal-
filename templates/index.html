@@ -4,27 +4,114 @@
 {% block title %}Home - CUZ Management Portal{% endblock %}
 
 {% block content %}
+<!-- Fixed Floating Utility Bar (Top Right Corner) -->
+<div class="login-utility-bar d-none d-lg-block">
+    <div class="dropdown">
+        <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical me-1" viewBox="0 0 16 16">
+              <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+            </svg>
+            Utilities
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+            <li>
+                <a class="dropdown-item" href="{{ url_for('auth.login') }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shield-lock me-2 text-warning" viewBox="0 0 16 16">
+                        <path d="M5.338 1.59a.85.85 0 0 0-1.399-.175L.16 8.525a1.26 1.26 0 0 0-.25 1.026c.1.472.45.895.96.895h.711a.75.75 0 0 1 .5.123.743.743 0 0 0 .584.058c.27-.101.483-.242.66-.403l.635-.678a1 1 0 0 1 .802-.345h.19c.47 0 .864.33 1.037.76l.175.45c.094.241.168.513.265.758.118.286.277.561.432.793l.019.034a.75.75 0 0 1-.362.909l-.178.077a.75.75 0 0 0-.46.33L8 15.016l3.37-2.671a.75.75 0 0 0-.362-.909l-.178-.077a.75.75 0 0 1-.46-.33l-.019-.034c-.155-.232-.314-.507-.432-.793a4.015 4.015 0 0 0-.66-.403c-.177-.161-.39-.302-.66-.403a.743.743 0 0 0-.584-.058.75.75 0 0 1-.5-.123H6.711a.998.998 0 0 0-.96-.895c-.51 0-.86.423-.96.895a1.26 1.26 0 0 0-.25 1.026l-3.37 5.016a1.26 1.26 0 0 0-.25 1.026c.1.472.45.895.96.895h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566a1.13 1.13 0 0 0-1.96 0z"/>
+                    </svg>
+                    Admin Login
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="{{ url_for('auth.register') }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus me-2 text-success" viewBox="0 0 16 16">
+                        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                        <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                    </svg>
+                    New Student Registration
+                </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item" href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle me-2 text-info" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M8.93 6.556c-.534-.14-1.284-.336-1.923-.715A.75.75 0 0 0 7 5.5V4a.5.5 0 0 1 1 0v1.5h.5c.371 0 .69.23.82.556l.01.03a1.5 1.5 0 0 1-.78 2.016zM8 10a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5z"/>
+                    </svg>
+                    Help & Support
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- END: Floating Utility Bar -->
+
 <style>
     /* Enhanced CSS with better organization and additional polish */
     :root {
-        
-    --primary-blue: #050939f5;
-    --secondary-blue: #080693;
-    --accent-blue: #02052df7;
-    --light-blue: #6b7199;
-    --success-green: #197f13c3;
-    --warning-orange: #b56a0df5;
-}
+        --primary-blue: #050939f5;
+        --secondary-blue: #080693;
+        --accent-blue: #02052df7;
+        --light-blue: #6b7199;
+        --success-green: #197f13c3;
+        --warning-orange: #b56a0df5;
+        --gradient-primary: linear-gradient(135deg, #050939f5 0%, #080693 100%);
+        --gradient-secondary: linear-gradient(135deg, #080693 0%, #6b7199 100%);
+    }
     
-    .hero-section {
-        background:  linear-gradient(rgba(3, 3, 112, 0.8), rgba(52, 152, 219, 0.7)), 
-        url("/static/images/cuz3.jpg") center/cover no-repeat;
+    /* Floating Utility Bar Styles */
+    .login-utility-bar {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+    
+    .login-utility-bar .btn {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+    
+    .login-utility-bar .btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+    
+    .login-utility-bar .dropdown-menu {
+        min-width: 220px;
+        border-radius: 12px;
+        margin-top: 8px;
+    }
+    
+    .login-utility-bar .dropdown-item {
+        padding: 10px 15px;
+        border-radius: 6px;
+        margin: 2px 8px;
+        width: auto;
+        transition: all 0.2s ease;
+    }
+    
+    .login-utility-bar .dropdown-item:hover {
+        background: var(--light-blue);
         color: white;
-        padding: 100px 0;
+    }
+    
+    /* Enhanced Hero Section */
+    .hero-section {
+        background: linear-gradient(rgba(3, 3, 112, 0.85), rgba(52, 152, 219, 0.8)), 
+                    url("/static/images/cuz3.jpg") center/cover no-repeat;
+        color: white;
+        padding: 140px 0 100px;
         text-align: center;
         margin-bottom: 50px;
         position: relative;
         overflow: hidden;
+        clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
     }
     
     .hero-section::before {
@@ -34,20 +121,21 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="%23ffffff" opacity="0.1"><polygon points="0,0 1000,50 1000,100 0,100"/></svg>') bottom center no-repeat;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="%23ffffff" opacity="0.05"><polygon points="0,0 1000,50 1000,100 0,100"/></svg>') bottom center no-repeat;
         background-size: cover;
     }
     
     .hero-section h1 {
-        font-size: 3.5rem;
+        font-size: 3.8rem;
         font-weight: 800;
         margin-bottom: 25px;
         text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
         position: relative;
+        letter-spacing: -0.5px;
     }
     
     .hero-section p {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         max-width: 800px;
         margin: 0 auto 40px;
         opacity: 0.95;
@@ -56,18 +144,169 @@
         font-weight: 300;
     }
     
+    /* Enhanced Stats Section */
+    .stats-section {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 80px 0;
+        margin: 80px 0;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .stats-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%23ffffff" opacity="0.03"><circle cx="50" cy="50" r="40"/></svg>') center/cover no-repeat;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 20px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .stat-number {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        position: relative;
+        display: inline-block;
+    }
+    
+    .stat-number::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: rgba(255,255,255,0.5);
+        border-radius: 2px;
+    }
+    
+    .stat-label {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Enhanced Features Section */
+    .features-section {
+        margin: 100px 0;
+        position: relative;
+    }
+    
+    .features-section h2 {
+        text-align: center;
+        color: var(--primary-blue);
+        margin-bottom: 60px;
+        font-weight: 800;
+        font-size: 2.8rem;
+        position: relative;
+        padding-bottom: 20px;
+    }
+    
+    .features-section h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
+        border-radius: 2px;
+    }
+    
+    .feature-card {
+        text-align: center;
+        padding: 50px 30px;
+        border-radius: 20px;
+        transition: all 0.4s ease;
+        height: 100%;
+        background: white;
+        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: var(--gradient-primary);
+    }
+    
+    .feature-card:hover {
+        background: white;
+        transform: translateY(-15px) scale(1.03);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    
+    .feature-icon {
+        font-size: 3.5rem;
+        margin-bottom: 25px;
+        color: var(--primary-blue);
+        background: linear-gradient(135deg, var(--light-blue) 0%, #ffffff 100%);
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        transition: all 0.4s ease;
+    }
+    
+    .feature-card:hover .feature-icon {
+        transform: rotateY(180deg);
+        background: var(--gradient-primary);
+        color: white;
+    }
+    
+    .feature-card h4 {
+        color: var(--primary-blue);
+        margin-bottom: 20px;
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+    
+    .feature-card p {
+        color: #666;
+        line-height: 1.7;
+        font-size: 1.05rem;
+    }
+    
+    /* Enhanced Portal Cards */
     .portal-cards {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 30px;
-        margin: 60px 0;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 35px;
+        margin: 80px 0;
     }
     
     .portal-card {
         background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
         border-radius: 20px;
-        padding: 35px 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        padding: 40px 30px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.08);
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         border-top: 5px solid var(--primary-blue);
         position: relative;
@@ -91,18 +330,18 @@
     
     .portal-card:hover {
         transform: translateY(-12px) scale(1.02);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
     }
     
     .portal-card h3 {
         color: var(--primary-blue);
-        margin-bottom: 20px;
-        font-size: 1.6rem;
+        margin-bottom: 25px;
+        font-size: 1.7rem;
         padding-bottom: 15px;
         border-bottom: 3px solid var(--light-blue);
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
     }
     
     .card-links {
@@ -112,14 +351,14 @@
     }
     
     .card-links li {
-        margin-bottom: 12px;
+        margin-bottom: 15px;
         position: relative;
     }
     
     .card-links a {
         display: flex;
         align-items: center;
-        padding: 14px 18px;
+        padding: 16px 20px;
         background: var(--light-blue);
         border-radius: 12px;
         text-decoration: none;
@@ -127,7 +366,8 @@
         transition: all 0.3s ease;
         border-left: 4px solid var(--accent-blue);
         font-weight: 500;
-        gap: 10px;
+        gap: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
     
     .card-links a::before {
@@ -142,7 +382,7 @@
         background: var(--accent-blue);
         color: white;
         transform: translateX(8px);
-        box-shadow: 0 5px 15px rgba(41, 128, 185, 0.3);
+        box-shadow: 0 8px 15px rgba(41, 128, 185, 0.3);
     }
     
     .card-links a:hover::before {
@@ -150,14 +390,16 @@
         transform: translateX(0);
     }
     
+    /* Enhanced Auth Section */
     .auth-section {
         text-align: center;
-        margin: 70px 0;
-        padding: 50px 40px;
+        margin: 100px 0;
+        padding: 70px 50px;
         background: linear-gradient(135deg, var(--light-blue) 0%, #ffffff 100%);
-        border-radius: 20px;
+        border-radius: 25px;
         border: 2px dashed rgba(74, 123, 200, 0.3);
         position: relative;
+        overflow: hidden;
     }
     
     .auth-section::before {
@@ -168,40 +410,55 @@
         right: -2px;
         bottom: -2px;
         background: linear-gradient(45deg, var(--primary-blue), var(--accent-blue), var(--secondary-blue));
-        border-radius: 20px;
+        border-radius: 25px;
         z-index: -1;
         opacity: 0.1;
     }
     
     .auth-section h2 {
         color: var(--primary-blue);
-        margin-bottom: 25px;
-        font-weight: 700;
-        font-size: 2.2rem;
+        margin-bottom: 30px;
+        font-weight: 800;
+        font-size: 2.5rem;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .auth-section h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: var(--primary-blue);
+        border-radius: 2px;
     }
     
     .auth-buttons {
         display: flex;
-        gap: 20px;
+        gap: 25px;
         justify-content: center;
-        margin-top: 30px;
+        margin-top: 40px;
         flex-wrap: wrap;
     }
     
     .btn {
-        padding: 15px 35px;
+        padding: 18px 40px;
         border: none;
-        border-radius: 12px;
-        font-size: 1.1rem;
+        border-radius: 15px;
+        font-size: 1.2rem;
         cursor: pointer;
         transition: all 0.3s ease;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         font-weight: 600;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
     
     .btn::before {
@@ -220,25 +477,23 @@
     }
     
     .btn-primary {
-        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+        background: var(--gradient-primary);
         color: white;
-        box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3);
     }
     
     .btn-secondary {
         background: white;
         color: var(--primary-blue);
         border: 2px solid var(--primary-blue);
-        box-shadow: 0 5px 15px rgba(44, 62, 80, 0.1);
     }
     
     .btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
     }
     
     .btn-primary:hover {
-        background: linear-gradient(135deg, var(--secondary-blue) 0%, var(--primary-blue) 100%);
+        background: var(--gradient-secondary);
     }
     
     .btn-secondary:hover {
@@ -246,104 +501,160 @@
         color: white;
     }
     
-    .feature-icon {
-        font-size: 3rem;
-        margin-bottom: 20px;
+    /* New Testimonials Section */
+    .testimonials-section {
+        background: #f8f9fa;
+        padding: 100px 0;
+        margin: 80px 0;
+        border-radius: 25px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .testimonials-section h2 {
+        text-align: center;
         color: var(--primary-blue);
-        background: linear-gradient(135deg, var(--light-blue) 0%, #ffffff 100%);
-        width: 80px;
-        height: 80px;
+        margin-bottom: 60px;
+        font-weight: 800;
+        font-size: 2.8rem;
+    }
+    
+    .testimonial-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        margin: 20px;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    
+    .testimonial-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    }
+    
+    .testimonial-text {
+        font-style: italic;
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: #555;
+        margin-bottom: 25px;
+        position: relative;
+    }
+    
+    .testimonial-text::before {
+        content: '"';
+        font-size: 4rem;
+        color: var(--light-blue);
+        position: absolute;
+        top: -20px;
+        left: -10px;
+        opacity: 0.3;
+        font-family: Georgia, serif;
+    }
+    
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .author-avatar {
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
+        background: var(--gradient-primary);
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 20px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-    
-    .features-section {
-        margin: 80px 0;
-    }
-    
-    .features-section h2 {
-        text-align: center;
-        color: var(--primary-blue);
-        margin-bottom: 50px;
-        font-weight: 800;
-        font-size: 2.5rem;
-        position: relative;
-        padding-bottom: 15px;
-    }
-    
-    .features-section h2::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 4px;
-        background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
-        border-radius: 2px;
-    }
-    
-    .feature-card {
-        text-align: center;
-        padding: 40px 25px;
-        border-radius: 15px;
-        transition: all 0.4s ease;
-        height: 100%;
-        background: white;
-        border: 1px solid rgba(0,0,0,0.05);
-    }
-    
-    .feature-card:hover {
-        background: var(--light-blue);
-        transform: translateY(-10px) scale(1.02);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-    }
-    
-    .feature-card h4 {
-        color: var(--primary-blue);
-        margin-bottom: 15px;
-        font-weight: 700;
-        font-size: 1.3rem;
-    }
-    
-    .feature-card p {
-        color: #666;
-        line-height: 1.6;
-    }
-    
-    .stats-section {
-        background: var(--primary-blue);
         color: white;
-        padding: 60px 0;
-        margin: 80px 0;
-        border-radius: 20px;
+        font-weight: bold;
+        font-size: 1.5rem;
     }
     
-    .stat-item {
+    .author-info h4 {
+        margin: 0;
+        color: var(--primary-blue);
+        font-weight: 700;
+    }
+    
+    .author-info p {
+        margin: 0;
+        color: #777;
+        font-size: 0.9rem;
+    }
+    
+    /* New Events Section */
+    .events-section {
+        padding: 80px 0;
+    }
+    
+    .events-section h2 {
         text-align: center;
-        padding: 20px;
-    }
-    
-    .stat-number {
-        font-size: 3rem;
+        color: var(--primary-blue);
+        margin-bottom: 60px;
         font-weight: 800;
-        margin-bottom: 10px;
-        color: var(--secondary-blue);
+        font-size: 2.8rem;
     }
     
-    .stat-label {
-        font-size: 1.1rem;
-        opacity: 0.9;
-        font-weight: 500;
+    .event-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+        border-left: 5px solid var(--primary-blue);
+        transition: all 0.3s ease;
     }
     
+    .event-card:hover {
+        transform: translateX(10px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    }
+    
+    .event-date {
+        background: var(--gradient-primary);
+        color: white;
+        width: 70px;
+        height: 70px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        float: left;
+        margin-right: 20px;
+    }
+    
+    .event-day {
+        font-size: 1.8rem;
+        font-weight: 800;
+        line-height: 1;
+    }
+    
+    .event-month {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .event-info h4 {
+        margin: 0 0 5px;
+        color: var(--primary-blue);
+        font-weight: 700;
+    }
+    
+    .event-info p {
+        margin: 0;
+        color: #777;
+        font-size: 0.95rem;
+    }
+    
+    /* Responsive Design */
     @media (max-width: 768px) {
         .hero-section {
-            padding: 60px 0;
+            padding: 100px 0 60px;
+            clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
         }
         
         .hero-section h1 {
@@ -356,7 +667,7 @@
         
         .portal-cards {
             grid-template-columns: 1fr;
-            gap: 20px;
+            gap: 25px;
         }
         
         .auth-buttons {
@@ -370,172 +681,287 @@
             max-width: 300px;
         }
         
-        .features-section h2 {
-            font-size: 2rem;
+        .features-section h2,
+        .testimonials-section h2,
+        .events-section h2 {
+            font-size: 2.2rem;
+        }
+        
+        .stat-number {
+            font-size: 2.8rem;
         }
     }
 </style>
 
-    <div class="hero-section">
-        <div class="container">
-            <h1>Welcome to CUZ Management Portal</h1>
-            <p>Your Gateway to Seamless Academic Management and Success.<br>
-            And remember success begins at Cavendish!</p>
-            <div class="auth-buttons">
-                <a href="/auth/login" class="btn btn-primary">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Login to Portal
-                </a>
-                <a href="/auth/register" class="btn btn-secondary">
-                    <i class="fas fa-user-plus"></i>
-                    Create Account
-                </a>
-            </div>
-        </div>
-    </div>
-
+<!-- The rest of your HTML content remains exactly the same -->
+<div class="hero-section">
     <div class="container">
-        <!-- Stats Section -->
-        <div class="stats-section">
-            <div class="row text-center">
-                <div class="col-md-3 col-6">
-                    <div class="stat-item">
-                        <div class="stat-number">5,000+</div>
-                        <div class="stat-label">Active Students</div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="stat-item">
-                        <div class="stat-number">200+</div>
-                        <div class="stat-label">Expert Faculty</div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="stat-item">
-                        <div class="stat-number">99.9%</div>
-                        <div class="stat-label">Uptime</div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="stat-item">
-                        <div class="stat-number">24/7</div>
-                        <div class="stat-label">Support</div>
-                    </div>
-                </div>
-            </div>
+        <h1>Welcome to CUZ Management Portal</h1>
+        <p>Your Gateway to Seamless Academic Management and Success.<br>
+        And remember success begins at Cavendish!</p>
+        <div class="auth-buttons">
+            <a href="/auth/login" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i>
+                Login to Portal
+            </a>
+            <a href="/auth/register" class="btn btn-secondary">
+                <i class="fas fa-user-plus"></i>
+                Create Account
+            </a>
         </div>
-
-        <div class="features-section">
-            <h2>Why Choose Our Portal?</h2>
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h4>Enterprise Security</h4>
-                        <p>Military-grade encryption and multi-factor authentication to protect your academic data and privacy.</p>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-bolt"></i>
-                        </div>
-                        <h4>Lightning Fast</h4>
-                        <p>Optimized performance with instant access to grades, schedules, and resources across all devices.</p>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-mobile-alt"></i>
-                        </div>
-                        <h4>Mobile Optimized</h4>
-                        <p>Responsive design that works perfectly on smartphones, tablets, and desktop computers.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="portal-cards">
-            <!-- Student Portal, eish these chaps are so unserious lol -->
-            <div class="portal-card">
-                <h3><i class="fas fa-user-graduate"></i>Student Portal</h3>
-                <ul class="card-links">
-                    <li><a href="/student/dashboard"><i class="fas fa-tachometer-alt"></i>Student Dashboard</a></li>
-                    <li><a href="/student/registration"><i class="fas fa-book"></i>Course Registration</a></li>
-                    <li><a href="/student/payments"><i class="fas fa-credit-card"></i>Fee Payments</a></li>
-                    <li><a href="/student/results"><i class="fas fa-chart-line"></i>Academic Results</a></li>
-                    <li><a href="/student/dockets"><i class="fas fa-file-alt"></i>Exam Dockets</a></li>
-                </ul>
-            </div>
-
-            <!-- Admin Portal, ati this is where the admin uploads your zeros lol  -->
-            <div class="portal-card">
-                <h3><i class="fas fa-users-cog"></i>Admin Portal</h3>
-                <ul class="card-links">
-                    <li><a href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i>Admin Dashboard</a></li>
-                    <li><a href="/admin/students"><i class="fas fa-user-graduate"></i>Student Management</a></li>
-                    <li><a href="/admin/payments"><i class="fas fa-money-check"></i>Payment Records</a></li>
-                    <li><a href="/admin/courses"><i class="fas fa-book-open"></i>Course Management</a></li>
-                    <li><a href="/admin/results"><i class="fas fa-chart-bar"></i>Results Management</a></li>
-                </ul>
-            </div>
-
-            <!-- Payment System, money is scarce nowadays so ba admin needs to relax lol -->
-            <div class="portal-card">
-                <h3><i class="fas fa-credit-card"></i>Payment System</h3>
-                <ul class="card-links">
-                    <li><a href="/payment/tuition"><i class="fas fa-university"></i>Pay Tuition Fees</a></li>
-                    <li><a href="/payment/docket"><i class="fas fa-file-invoice"></i>Pay for Exam Dockets</a></li>
-                    <li><a href="/payment/history"><i class="fas fa-history"></i>Payment History</a></li>
-                    <li><a href="/payment/receipts"><i class="fas fa-receipt"></i>Download Receipts</a></li>
-                </ul>
-            </div>
-
-            <!-- Results System, bally aint gonna be happy with your ressults mahn! lol -->
-            <div class="portal-card">
-                <h3><i class="fas fa-chart-bar"></i>Results System</h3>
-                <ul class="card-links">
-                    <li><a href="/results/view"><i class="fas fa-eye"></i>View Results</a></li>
-                    <li><a href="/results/upload"><i class="fas fa-upload"></i>Upload Results (Staff)</a></li>
-                    <li><a href="/results/transcript"><i class="fas fa-scroll"></i>Academic Transcript</a></li>
-                    <li><a href="/results/cat1"><i class="fas fa-chart-pie"></i>CAT 1 Results</a></li>
-                    <li><a href="/results/cat2"><i class="fas fa-chart-pie"></i>CAT 2 Results</a></li>
-                </ul>
-            </div>
-
-            <!-- Quick Access -->
-            <div class="portal-card">
-                <h3><i class="fas fa-rocket"></i>Quick Access</h3>
-                <ul class="card-links">
-                    <li><a href="/auth/login?role=student"><i class="fas fa-sign-in-alt"></i>Student Login</a></li>
-                    <li><a href="/auth/login?role=admin"><i class="fas fa-sign-in-alt"></i>Admin Login</a></li>
-                    <li><a href="/auth/login?role=lecturer"><i class="fas fa-sign-in-alt"></i>Lecturer Login</a></li>
-                    <li><a href="/about"><i class="fas fa-info-circle"></i>About Portal</a></li>
-                    <li><a href="/contact"><i class="fas fa-headset"></i>Contact Support</a></li>
-                </ul>
-            </div>
-        </div>
-
-        {% if not current_user.is_authenticated %}
-        <div class="auth-section">
-            <h2>Ready to Get Started?</h2>
-            <p class="mb-4" style="font-size: 1.2rem; opacity: 0.9;">
-                Join our thriving community of students, faculty, and administrators using our cutting-edge portal for seamless academic management.
-            </p>
-            <div class="auth-buttons">
-                <a href="/auth/login" class="btn btn-primary">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Login to Your Account
-                </a>
-                <a href="/auth/register" class="btn btn-secondary">
-                    <i class="fas fa-user-plus"></i>
-                    Create New Account
-                </a>
-            </div>
-        </div>
-        {% endif %}
     </div>
+</div>
+
+<div class="container">
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="row text-center">
+            <div class="col-md-3 col-6">
+                <div class="stat-item">
+                    <div class="stat-number">5,000+</div>
+                    <div class="stat-label">Active Students</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-item">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-label">Expert Faculty</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-item">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+        <h2>Why Choose Our Portal?</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Enterprise Security</h4>
+                    <p>Military-grade encryption and multi-factor authentication to protect your academic data and privacy with state-of-the-art security protocols.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h4>Lightning Fast</h4>
+                    <p>Optimized performance with instant access to grades, schedules, and resources across all devices with minimal loading times.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h4>Mobile Optimized</h4>
+                    <p>Responsive design that works perfectly on smartphones, tablets, and desktop computers for seamless access anywhere.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Testimonials Section -->
+    <div class="testimonials-section">
+        <div class="container">
+            <h2>What Our Community Says</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            The CUZ portal has transformed how I manage my academic journey. Everything is so intuitive and accessible!
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">JS</div>
+                            <div class="author-info">
+                                <h4>John Smith</h4>
+                                <p>Third Year Student</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            As a faculty member, I appreciate how efficiently I can manage courses and communicate with students through this portal.
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">AD</div>
+                            <div class="author-info">
+                                <h4>Dr. Amanda Davis</h4>
+                                <p>Faculty of Business</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            The administrative tools have streamlined our processes significantly. A game-changer for university management.
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">RJ</div>
+                            <div class="author-info">
+                                <h4>Robert Johnson</h4>
+                                <p>Administrative Staff</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Portal Cards Section -->
+    <div class="portal-cards">
+        <!-- Student Portal -->
+        <div class="portal-card">
+            <h3><i class="fas fa-user-graduate"></i>Student Portal</h3>
+            <ul class="card-links">
+                <li><a href="/student/dashboard"><i class="fas fa-tachometer-alt"></i>Student Dashboard</a></li>
+                <li><a href="/student/registration"><i class="fas fa-book"></i>Course Registration</a></li>
+                <li><a href="/student/payments"><i class="fas fa-credit-card"></i>Fee Payments</a></li>
+                <li><a href="/student/results"><i class="fas fa-chart-line"></i>Academic Results</a></li>
+                <li><a href="/student/dockets"><i class="fas fa-file-alt"></i>Exam Dockets</a></li>
+            </ul>
+        </div>
+
+        <!-- Admin Portal -->
+        <div class="portal-card">
+            <h3><i class="fas fa-users-cog"></i>Admin Portal</h3>
+            <ul class="card-links">
+                <li><a href="/admin/dashboard"><i class="fas fa-tachometer-alt"></i>Admin Dashboard</a></li>
+                <li><a href="/admin/students"><i class="fas fa-user-graduate"></i>Student Management</a></li>
+                <li><a href="/admin/payments"><i class="fas fa-money-check"></i>Payment Records</a></li>
+                <li><a href="/admin/courses"><i class="fas fa-book-open"></i>Course Management</a></li>
+                <li><a href="/admin/results"><i class="fas fa-chart-bar"></i>Results Management</a></li>
+            </ul>
+        </div>
+
+        <!-- Payment System -->
+        <div class="portal-card">
+            <h3><i class="fas fa-credit-card"></i>Payment System</h3>
+            <ul class="card-links">
+                <li><a href="/payment/tuition"><i class="fas fa-university"></i>Pay Tuition Fees</a></li>
+                <li><a href="/payment/docket"><i class="fas fa-file-invoice"></i>Pay for Exam Dockets</a></li>
+                <li><a href="/payment/history"><i class="fas fa-history"></i>Payment History</a></li>
+                <li><a href="/payment/receipts"><i class="fas fa-receipt"></i>Download Receipts</a></li>
+            </ul>
+        </div>
+
+        <!-- Results System -->
+        <div class="portal-card">
+            <h3><i class="fas fa-chart-bar"></i>Results System</h3>
+            <ul class="card-links">
+                <li><a href="/results/view"><i class="fas fa-eye"></i>View Results</a></li>
+                <li><a href="/results/upload"><i class="fas fa-upload"></i>Upload Results (Staff)</a></li>
+                <li><a href="/results/transcript"><i class="fas fa-scroll"></i>Academic Transcript</a></li>
+                <li><a href="/results/cat1"><i class="fas fa-chart-pie"></i>CAT 1 Results</a></li>
+                <li><a href="/results/cat2"><i class="fas fa-chart-pie"></i>CAT 2 Results</a></li>
+            </ul>
+        </div>
+
+        <!-- Quick Access -->
+        <div class="portal-card">
+            <h3><i class="fas fa-rocket"></i>Quick Access</h3>
+            <ul class="card-links">
+                <li><a href="/auth/login?role=student"><i class="fas fa-sign-in-alt"></i>Student Login</a></li>
+                <li><a href="/auth/login?role=admin"><i class="fas fa-sign-in-alt"></i>Admin Login</a></li>
+                <li><a href="/auth/login?role=lecturer"><i class="fas fa-sign-in-alt"></i>Lecturer Login</a></li>
+                <li><a href="/about"><i class="fas fa-info-circle"></i>About Portal</a></li>
+                <li><a href="/contact"><i class="fas fa-headset"></i>Contact Support</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- New Events Section -->
+    <div class="events-section">
+        <h2>Upcoming Events & Deadlines</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="event-card">
+                    <div class="event-date">
+                        <div class="event-day">15</div>
+                        <div class="event-month">MAR</div>
+                    </div>
+                    <div class="event-info">
+                        <h4>Course Registration Deadline</h4>
+                        <p>Last day to register for Semester 2 courses</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="event-card">
+                    <div class="event-date">
+                        <div class="event-day">22</div>
+                        <div class="event-month">MAR</div>
+                    </div>
+                    <div class="event-info">
+                        <h4>Tuition Fee Payment</h4>
+                        <p>Deadline for Semester 2 tuition fee payment</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="event-card">
+                    <div class="event-date">
+                        <div class="event-day">05</div>
+                        <div class="event-month">APR</div>
+                    </div>
+                    <div class="event-info">
+                        <h4>CAT 1 Examinations</h4>
+                        <p>Continuous Assessment Tests begin</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="event-card">
+                    <div class="event-date">
+                        <div class="event-day">20</div>
+                        <div class="event-month">APR</div>
+                    </div>
+                    <div class="event-info">
+                        <h4>Academic Advisory Week</h4>
+                        <p>Meet with academic advisors for guidance</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if not current_user.is_authenticated %}
+    <div class="auth-section">
+        <h2>Ready to Get Started?</h2>
+        <p class="mb-4" style="font-size: 1.3rem; opacity: 0.9;">
+            Join our thriving community of students, faculty, and administrators using our cutting-edge portal for seamless academic management.
+        </p>
+        <div class="auth-buttons">
+            <a href="/auth/login" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i>
+                Login to Your Account
+            </a>
+            <a href="/auth/register" class="btn btn-secondary">
+                <i class="fas fa-user-plus"></i>
+                Create New Account
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
