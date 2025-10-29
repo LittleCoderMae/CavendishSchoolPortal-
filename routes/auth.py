@@ -1,37 +1,14 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from database.database import db
-from models.user import User
-from models.student import Student
+from models.user import User, UserRole
 
 auth_bp = Blueprint('auth', __name__)
 
-@auth_bp.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect_by_role(current_user.role)
-
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-        role = request.form.get('role')
-
-        if not email or not password or not role:
-            flash('Please fill in all fields', 'error')
-            return render_template('auth/login.html')
-
-        user = User.query.filter_by(email=email, role=role).first()
-
-        if user and check_password_hash(user.password_hash, password):
-            login_user(user)
-            flash(f'Welcome back, {user.username}!', 'success')
-            return redirect_by_role(user.role)
-        else:
-            flash('Invalid email, password, or role selection', 'error')
-
-    return render_template('auth/login.html')
-
+# ------------------------------------------------------------
+# REDIRECT BY ROLE (Helper function - should be above routes)
+# ------------------------------------------------------------
 def redirect_by_role(role):
     if role == 'student':
         return redirect(url_for('student.dashboard'))
@@ -41,81 +18,134 @@ def redirect_by_role(role):
         return redirect(url_for('admin.dashboard'))
     return redirect(url_for('auth.login'))
 
+# ------------------------------------------------------------
+# LOGIN ROUTE
+# ------------------------------------------------------------
+@auth_bp.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect_by_role(current_user.role.value)
+
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        role = request.form.get('role')
+
+        if not email or not password or not role:
+            flash('Please fill in all fields.', 'error')
+            return render_template('auth/login.html')
+
+        user = User.query.filter_by(email=email).first()
+
+        # Debug logging (remove in production)
+        print(f"Login attempt: {email} as {role}")
+        if user:
+            print(f"User found: {user.email}, actual role: {user.role.value}")
+            print(f"Password check: {check_password_hash(user.password_hash, password)}")
+            print(f"Role match: {user.role.value == role}")
+
+        if not user:
+            flash('No account found with that email.', 'error')
+        elif user.role.value != role:
+            flash(f'Incorrect role selected. This email is registered as a {user.role.value}.', 'error')
+        elif not check_password_hash(user.password_hash, password):
+            flash('Invalid password.', 'error')
+        elif not user.is_active:
+            flash('Account is deactivated. Please contact administrator.', 'error')
+        else:
+            login_user(user, remember=True)
+            flash(f'Welcome back, {user.first_name}!', 'success')
+            return redirect_by_role(user.role.value)
+
+    return render_template('auth/login.html')
+# ------------------------------------------------------------
+# REGISTER ROUTE
+# ------------------------------------------------------------
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('auth.login'))
+        return redirect_by_role(current_user.role.value)
 
     if request.method == 'POST':
-        username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
         role = request.form.get('role', 'student')
-
         first_name = request.form.get('first_name')
         last_name = request.form.get('last_name')
+
+        # Role-specific fields
         program = request.form.get('program')
         year_of_study = request.form.get('year_of_study')
-        semester = request.form.get('semester')
+        staff_id = request.form.get('staff_id')
+        department = request.form.get('department')
 
-        if not all([username, email, password, confirm_password]):
-            flash('Please fill in all required fields', 'error')
+        # --- Validations ---
+        if not all([email, password, confirm_password, first_name, last_name]):
+            flash('Please fill in all required fields.', 'error')
             return render_template('auth/register.html')
 
         if password != confirm_password:
-            flash('Passwords do not match', 'error')
+            flash('Passwords do not match.', 'error')
             return render_template('auth/register.html')
 
         if len(password) < 6:
-            flash('Password must be at least 6 characters long', 'error')
-            return render_template('auth/register.html')
-
-        if User.query.filter_by(username=username).first():
-            flash('Username already exists', 'error')
+            flash('Password must be at least 6 characters long.', 'error')
             return render_template('auth/register.html')
 
         if User.query.filter_by(email=email).first():
-            flash('Email already exists', 'error')
+            flash('Email already exists.', 'error')
             return render_template('auth/register.html')
 
-        if role == 'student':
-            if not all([first_name, last_name, program, year_of_study, semester]):
-                flash('Please fill in all student details', 'error')
-                return render_template('auth/register.html')
+        # Role-specific validations
+        if role == 'student' and not program:
+            flash('Please select a program for student registration.', 'error')
+            return render_template('auth/register.html')
 
+        if role == 'lecturer' and not all([staff_id, department]):
+            flash('Please fill in all lecturer details.', 'error')
+            return render_template('auth/register.html')
+
+        # --- User creation with single model ---
         try:
+            # Convert role string to Enum
+            user_role = UserRole(role)
+            
+            # Create user
             user = User(
-                username=username,
                 email=email,
                 password_hash=generate_password_hash(password),
-                role=role
+                first_name=first_name,
+                last_name=last_name,
+                role=user_role
             )
-            db.session.add(user)
-            db.session.flush()
 
+            # Add role-specific data
             if role == 'student':
-                student = Student(
-                    user_id=user.id,
-                    student_id=f"S{user.id:06d}",
-                    first_name=first_name,
-                    last_name=last_name,
-                    program=program,
-                    year_of_study=int(year_of_study),
-                    semester=int(semester)
-                )
-                db.session.add(student)
+                user.program = program
+                user.year_of_study = int(year_of_study) if year_of_study else None
+                user.student_id = f"S{User.query.count() + 1:06d}"  # Generate student ID
+            elif role == 'lecturer':
+                user.staff_id = staff_id
+                user.department = department
 
+            db.session.add(user)
             db.session.commit()
+            
             flash('Registration successful! Please login.', 'success')
             return redirect(url_for('auth.login'))
 
+        except ValueError:
+            flash('Invalid role selected.', 'error')
         except Exception as e:
             db.session.rollback()
-            flash('Error during registration, please try again.', 'error')
+            flash(f'Error during registration: {str(e)}', 'error')
 
     return render_template('auth/register.html')
 
+# ------------------------------------------------------------
+# LOGOUT ROUTE
+# ------------------------------------------------------------
 @auth_bp.route('/logout')
 @login_required
 def logout():
@@ -123,52 +153,52 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('auth.login'))
 
+# ------------------------------------------------------------
+# CREATE DEMO USERS ROUTE
+# ------------------------------------------------------------
 @auth_bp.route('/create-demo-users')
 def create_demo_users():
     try:
-        # Delete existing demo users first
         demo_emails = ['student@cuz.ac.zm', 'lecturer@cuz.ac.zm', 'admin@cuz.ac.zm']
+
+        # Delete existing demo users first
         existing_users = User.query.filter(User.email.in_(demo_emails)).all()
         for user in existing_users:
             db.session.delete(user)
         db.session.commit()
 
-        # Create demo student
+        # --- Create demo student ---
         student_user = User(
-            username='demo_student',
             email='student@cuz.ac.zm',
             password_hash=generate_password_hash('password123'),
-            role='student'
-        )
-        db.session.add(student_user)
-        db.session.flush()
-
-        student_profile = Student(
-            user_id=student_user.id,
-            student_id=f"S{student_user.id:06d}",
             first_name='John',
             last_name='Smith',
+            role=UserRole.STUDENT,
             program='Computer Science',
             year_of_study=2,
-            semester=1
+            student_id='S000001'
         )
-        db.session.add(student_profile)
+        db.session.add(student_user)
 
-        # Create demo lecturer
+        # --- Create demo lecturer ---
         lecturer_user = User(
-            username='demo_lecturer',
             email='lecturer@cuz.ac.zm',
             password_hash=generate_password_hash('password123'),
-            role='lecturer'
+            first_name='Dr. Sarah',
+            last_name='Johnson',
+            role=UserRole.LECTURER,
+            staff_id='L000001',
+            department='Computer Science'
         )
         db.session.add(lecturer_user)
 
-        # Create demo admin
+        # --- Create demo admin ---
         admin_user = User(
-            username='demo_admin',
             email='admin@cuz.ac.zm',
             password_hash=generate_password_hash('password123'),
-            role='admin'
+            first_name='Admin',
+            last_name='User',
+            role=UserRole.ADMIN
         )
         db.session.add(admin_user)
 
@@ -181,16 +211,28 @@ def create_demo_users():
         flash(f'Error creating demo users: {str(e)}', 'error')
         return redirect(url_for('auth.login'))
 
+# ------------------------------------------------------------
+# DEBUG ROUTE FOR ADMIN USE
+# ------------------------------------------------------------
 @auth_bp.route('/debug-users')
 def debug_users():
     users = User.query.all()
-    result = []
-    for user in users:
-        result.append({
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'role': user.role,
-            'password_hash': user.password_hash
-        })
-    return {'users': result}
+    result = [{
+        'id': user.id,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'role': user.role.value,
+        'student_id': user.student_id,
+        'staff_id': user.staff_id,
+        'program': user.program,
+        'is_active': user.is_active
+    } for user in users]
+    return jsonify({'users': result})
+
+# ------------------------------------------------------------
+# TEST ROUTE - To check if auth routes are working
+# ------------------------------------------------------------
+@auth_bp.route('/test')
+def test_auth():
+    return jsonify({'message': 'Auth routes are working!'})

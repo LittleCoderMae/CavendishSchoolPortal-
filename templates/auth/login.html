@@ -395,6 +395,36 @@
             color: var(--accent-blue);
         }
         
+        /* Flash messages */
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+        
+        .flash-message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .flash-error {
+            background: #fee;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .flash-success {
+            background: #efffee;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .flash-info {
+            background: #e7f3ff;
+            border: 1px solid #b8daff;
+            color: #004085;
+        }
+        
         @media (max-width: 768px) {
             .login-container {
                 flex-direction: column;
@@ -470,13 +500,26 @@
                 <h2>Login to Your Account</h2>
                 <p>Enter your credentials to access the portal</p>
             </div>
+
+            <!-- Flash Messages -->
+            <div class="flash-messages">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
             
             <form id="loginForm" action="{{ url_for('auth.login') }}" method="POST">
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <div class="input-with-icon">
                         <i class="fas fa-envelope"></i>
-                        <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                        <input type="email" id="email" name="email" placeholder="Enter your email address" required value="{{ request.form.email if request.form }}">
                     </div>
                 </div>
                 
@@ -494,9 +537,9 @@
                         <i class="fas fa-user-tag"></i>
                         <select id="role" name="role" required>
                             <option value="">Select your role</option>
-                            <option value="student">Student</option>
-                            <option value="lecturer">Lecturer</option>
-                            <option value="admin">Admin</option>
+                            <option value="student" {% if request.form and request.form.role == 'student' %}selected{% endif %}>Student</option>
+                            <option value="lecturer" {% if request.form and request.form.role == 'lecturer' %}selected{% endif %}>Lecturer</option>
+                            <option value="admin" {% if request.form and request.form.role == 'admin' %}selected{% endif %}>Admin</option>
                         </select>
                     </div>
                     <div class="role-info">Select your role to access the appropriate dashboard</div>
@@ -519,13 +562,13 @@
             <div class="demo-credentials">
                 <h4>Demo Credentials:</h4>
                 <div class="demo-role">
-                    <strong>Student:</strong> student@cuz.ac.zm / password123
+                    <strong>Student:</strong> student@cavendish.edu.zm / password123
                 </div>
                 <div class="demo-role">
-                    <strong>Lecturer:</strong> lecturer@cuz.ac.zm / password123
+                    <strong>Lecturer:</strong> lecturer@cavendish.edu.zm / password123
                 </div>
                 <div class="demo-role">
-                    <strong>Admin:</strong> admin@cuz.ac.zm / password123
+                    <strong>Admin:</strong> admin@cavendish.edu.zm / password123
                 </div>
             </div>
             
@@ -578,13 +621,13 @@
             roleSelect.addEventListener('change', function() {
                 const role = this.value;
                 if (role === 'student') {
-                    emailInput.value = 'student@cuz.ac.zm';
+                    emailInput.value = 'student@cavendish.edu.zm';
                     passwordInput.value = 'password123';
                 } else if (role === 'lecturer') {
-                    emailInput.value = 'lecturer@cuz.ac.zm';
+                    emailInput.value = 'lecturer@cavendish.edu.zm';
                     passwordInput.value = 'password123';
                 } else if (role === 'admin') {
-                    emailInput.value = 'admin@cuz.ac.zm';
+                    emailInput.value = 'admin@cavendish.edu.zm';
                     passwordInput.value = 'password123';
                 } else {
                     emailInput.value = '';
@@ -592,8 +635,7 @@
                 }
             });
             
-            // Form submission - using actual form submission instead of AJAX
-            // This will work with your Flask backend
+            // Form submission
             form.addEventListener('submit', function(e) {
                 const email = emailInput.value;
                 const password = passwordInput.value;
@@ -612,27 +654,28 @@
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
                 btn.disabled = true;
                 
-                // Let the form submit naturally to Flask
-                // Flask will handle the authentication and redirect
+                // Re-enable after 3 seconds in case of error
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 3000);
             });
             
-            // For demo purposes only - remove this in production
-            // This allows the demo credentials to work without backend
+            // Auto-fill demo credentials based on URL parameter
             const urlParams = new URLSearchParams(window.location.search);
             const demo = urlParams.get('demo');
             if (demo) {
-                // Auto-fill demo credentials based on URL parameter
                 if (demo === 'student') {
                     roleSelect.value = 'student';
-                    emailInput.value = 'student@cuz.ac.zm';
+                    emailInput.value = 'student@cavendish.edu.zm';
                     passwordInput.value = 'password123';
                 } else if (demo === 'lecturer') {
                     roleSelect.value = 'lecturer';
-                    emailInput.value = 'lecturer@cuz.ac.zm';
+                    emailInput.value = 'lecturer@cavendish.edu.zm';
                     passwordInput.value = 'password123';
                 } else if (demo === 'admin') {
                     roleSelect.value = 'admin';
-                    emailInput.value = 'admin@cuz.ac.zm';
+                    emailInput.value = 'admin@cavendish.edu.zm';
                     passwordInput.value = 'password123';
                 }
             }

@@ -1,0 +1,119 @@
+﻿=== WEB APPLICATION STRUCTURE ===
+Generated: 10/29/2025 20:49:30
+Path: C:\Users\alphaus.nkandu\Desktop\Mae's projects\CavendishSchoolPortal-
+
+[FOLDER] __pycache__
+  app.cpython-313.pyc (5.18 KB)
+  app.cpython-314.pyc (3.45 KB)
+  config.cpython-313.pyc (2.07 KB)
+  config.cpython-314.pyc (2.11 KB)
+  lecturer.cpython-313.pyc (1.34 KB)
+  lecturer.cpython-314.pyc (1.37 KB)
+  manage.cpython-314.pyc (504 B)
+app.py (3.82 KB)
+[FOLDER] CavendishSchoolPortal-
+config.py (1.24 KB)
+[FOLDER] database
+  __init__.py (120 B)
+  [FOLDER] __pycache__
+    __init__.cpython-313.pyc (292 B)
+    __init__.cpython-314.pyc (313 B)
+    database.cpython-313.pyc (1.13 KB)
+    database.cpython-314.pyc (1.18 KB)
+  database.py (795 B)
+[FOLDER] instance
+  cavendish_dev.db (52.00 KB)
+lecturer.py (762 B)
+manage.py (538 B)
+[FOLDER] models
+  __init__.py (20 B)
+  [FOLDER] __pycache__
+    __init__.cpython-313.pyc (185 B)
+    __init__.cpython-314.pyc (206 B)
+    course.cpython-313.pyc (1.23 KB)
+    course.cpython-314.pyc (1.28 KB)
+    payment.cpython-313.pyc (1.57 KB)
+    payment.cpython-314.pyc (1.66 KB)
+    result.cpython-313.pyc (2.43 KB)
+    result.cpython-314.pyc (2.57 KB)
+    student.cpython-313.pyc (2.38 KB)
+    student.cpython-314.pyc (2.49 KB)
+    user.cpython-313.pyc (1.73 KB)
+    user.cpython-314.pyc (1.82 KB)
+  course.py (469 B)
+  payment.py (683 B)
+  result.py (1.24 KB)
+  student.py (1.23 KB)
+  user.py (888 B)
+README.md (1.22 KB)
+requirements.txt (319 B)
+[FOLDER] routes
+  __init__.py (175 B)
+  [FOLDER] __pycache__
+    __init__.cpython-313.pyc (392 B)
+    __init__.cpython-314.pyc (413 B)
+    admin.cpython-313.pyc (2.38 KB)
+    admin.cpython-314.pyc (2.37 KB)
+    auth.cpython-313.pyc (9.73 KB)
+    auth.cpython-314.pyc (9.59 KB)
+    payment.cpython-313.pyc (3.82 KB)
+    payment.cpython-314.pyc (3.89 KB)
+    results.cpython-313.pyc (1.52 KB)
+    results.cpython-314.pyc (1.57 KB)
+    student.cpython-313.pyc (6.76 KB)
+    student.cpython-314.pyc (6.87 KB)
+  admin.py (1.40 KB)
+  auth.py (8.03 KB)
+  payment.py (2.54 KB)
+  results.py (909 B)
+  student.py (4.91 KB)
+[FOLDER] static
+  [FOLDER] css
+    style.css (1.15 KB)
+  [FOLDER] images
+    cuz1.jpg (217.03 KB)
+    cuz2.jpg (115.72 KB)
+    cuz3.jpg (70.54 KB)
+    cuz4.jpg (130.84 KB)
+    cuz5.jpg (151.97 KB)
+    logo1.jpg (40.32 KB)
+  [FOLDER] js
+    main.js (2.55 KB)
+[FOLDER] templates
+  404.html (235 B)
+  505.html (219 B)
+  [FOLDER] admin
+    dashboard.html (1.71 KB)
+    payments.html (2.38 KB)
+    results_management.html (23.10 KB)
+    students.html (2.06 KB)
+  [FOLDER] auth
+    login.html (20.45 KB)
+    register.html (25.50 KB)
+  base.html (12.34 KB)
+  index.html (31.91 KB)
+  [FOLDER] lecturer
+    dashboard.html (20.49 KB)
+    results.html (484 B)
+  [FOLDER] student
+    dashboard.html (3.63 KB)
+    dockets.html (6.91 KB)
+    payments.html (3.71 KB)
+    registration.html (4.95 KB)
+    results.html (2.32 KB)
+test_models.py (465 B)
+[FOLDER] utils
+  __init__.py (78 B)
+  helpers.py (1.48 KB)
+  payment_calculator.py (1.94 KB)
+
+=== FILE TYPE SUMMARY ===
+.pyc: 35 files
+.py: 22 files
+.html: 17 files
+.jpg: 6 files
+.txt: 1 files
+.js: 1 files
+.md: 1 files
+.db: 1 files
+.css: 1 files

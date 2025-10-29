@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Lecturer Profile</h1>
+    
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title">Personal Information</span>
+            
+            <div class="row">
+                <div class="col s12 m6">
+                    <p><strong>Name:</strong> {{ current_user.first_name }} {{ current_user.last_name }}</p>
+                    <p><strong>Email:</strong> {{ current_user.email }}</p>
+                    <p><strong>Staff ID:</strong> {{ current_user.staff_id }}</p>
+                </div>
+                <div class="col s12 m6">
+                    <p><strong>Department:</strong> {{ current_user.department }}</p>
+                    <p><strong>Role:</strong> {{ current_user.role.value }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

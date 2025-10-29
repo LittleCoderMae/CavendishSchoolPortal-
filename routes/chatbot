@@ -1,0 +1,149 @@
+#routes/chatboat
+from flask import Blueprint, request, jsonify, render_template
+from flask_login import login_required, current_user
+from models.user import db
+from models.chatbot import ChatMessage, ChatSession
+import openai  # or any other AI service
+import os
+
+chatbot = Blueprint('chatbot', __name__)
+
+@chatbot.route('/chat')
+@login_required
+def chat_interface():
+    return render_template('chatbot/chat.html')
+
+@chatbot.route('/api/chat/send', methods=['POST'])
+@login_required
+def send_message():
+    user_message = request.json.get('message')
+    
+    # Get or create active chat session
+    active_session = ChatSession.query.filter_by(
+        user_id=current_user.id, 
+        is_active=True
+    ).first()
+    
+    if not active_session:
+        active_session = ChatSession(user_id=current_user.id)
+        db.session.add(active_session)
+        db.session.commit()
+    
+    # Save user message
+    user_chat_message = ChatMessage(
+        user_id=current_user.id,
+        session_id=active_session.id,
+        message=user_message,
+        is_bot=False
+    )
+    db.session.add(user_chat_message)
+    
+    # Generate bot response based on user role and context
+    bot_response = generate_bot_response(user_message, current_user)
+    
+    # Save bot response
+    bot_chat_message = ChatMessage(
+        user_id=current_user.id,
+        session_id=active_session.id,
+        message=bot_response,
+        is_bot=True,
+        response=bot_response
+    )
+    db.session.add(bot_chat_message)
+    db.session.commit()
+    
+    return jsonify({
+        'user_message': user_message,
+        'bot_response': bot_response,
+        'session_id': active_session.id
+    })
+
+def generate_bot_response(user_message, user):
+    """Generate contextual responses based on user role and data"""
+    
+    # Simple rule-based responses first
+    lower_message = user_message.lower()
+    
+    # Greetings
+    if any(word in lower_message for word in ['hello', 'hi', 'hey']):
+        return f"Hello {user.first_name}! How can I help you today?"
+    
+    # Role-specific responses
+    if user.is_student():
+        return generate_student_response(user_message, user)
+    elif user.is_lecturer():
+        return generate_lecturer_response(user_message, user)
+    elif user.is_admin():
+        return generate_admin_response(user_message, user)
+    
+    # Fallback to AI or default response
+    return "I'm here to help! You can ask me about your results, payments, or general information."
+
+def generate_student_response(message, student):
+    """Generate responses for students"""
+    lower_msg = message.lower()
+    
+    # Results queries
+    if any(word in lower_msg for word in ['result', 'grade', 'mark', 'score']):
+        # Get student's latest results from database
+        latest_results = Result.query.filter_by(
+            user_id=student.id
+        ).order_by(Result.academic_year.desc()).limit(3).all()
+        
+        if latest_results:
+            response = "Here are your recent results:\n"
+            for result in latest_results:
+                response += f"- {result.course_name}: {result.grade} ({result.marks}%)\n"
+            return response
+        else:
+            return "No results found for your account yet."
+    
+    # Payment queries
+    elif any(word in lower_msg for word in ['payment', 'fee', 'balance', 'pay']):
+        recent_payments = Payment.query.filter_by(
+            user_id=student.id
+        ).order_by(Payment.payment_date.desc()).limit(3).all()
+        
+        if recent_payments:
+            response = "Your recent payments:\n"
+            for payment in recent_payments:
+                status_icon = "✅" if payment.status == 'completed' else "⏳"
+                response += f"- {payment.description}: ${payment.amount} {status_icon}\n"
+            return response
+        else:
+            return "No payment records found."
+    
+    # Course registration
+    elif any(word in lower_msg for word in ['register', 'course', 'enroll']):
+        return "You can register for courses through the Student Dashboard under 'Course Registration'."
+    
+    # General student info
+    elif any(word in lower_msg for word in ['program', 'study', 'year']):
+        return f"You're enrolled in {student.program}, Year {student.year_of_study}."
+    
+    return "As a student, I can help you with results, payments, and course information. What would you like to know?"
+
+def generate_lecturer_response(message, lecturer):
+    """Generate responses for lecturers"""
+    lower_msg = message.lower()
+    
+    if any(word in lower_msg for word in ['student', 'results', 'grades']):
+        return "You can manage student results through the Lecturer Dashboard under 'Results Management'."
+    
+    elif any(word in lower_msg for word in ['department', 'courses']):
+        return f"You're in the {lecturer.department} department. You can view your assigned courses in your dashboard."
+    
+    return "As a lecturer, I can help you with student results and course management."
+
+def generate_admin_response(message, admin):
+    """Generate responses for administrators"""
+    lower_msg = message.lower()
+    
+    if any(word in lower_msg for word in ['users', 'students', 'lecturers']):
+        user_count = User.query.count()
+        student_count = User.query.filter_by(role='student').count()
+        lecturer_count = User.query.filter_by(role='lecturer').count()
+        
+        return f"System Statistics:\n- Total Users: {user_count}\n- Students: {student_count}\n- Lecturers: {lecturer_count}"
+    
+    return "As an administrator, I can provide system statistics and help with user management."

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <h2>Student Portal Assistant</h2>
+        <p>Hello {{ current_user.first_name }}! How can I help you today?</p>
+    </div>
+    
+    <div class="chat-messages" id="chatMessages">
+        <!-- Messages will appear here -->
+    </div>
+    
+    <div class="chat-input">
+        <input type="text" id="messageInput" placeholder="Ask about results, payments, courses..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    
+    <div class="suggested-questions">
+        <p>Quick questions:</p>
+        <button onclick="askQuestion('What are my recent results?')">My Results</button>
+        <button onclick="askQuestion('Show my payments')">Payment Status</button>
+        <button onclick="askQuestion('How do I register for courses?')">Course Registration</button>
+    </div>
+</div>
+
+<script>
+function sendMessage() {
+    const messageInput = document.getElementById('messageInput');
+    const message = messageInput.value.trim();
+    
+    if (message) {
+        addMessage('user', message);
+        messageInput.value = '';
+        
+        fetch('/api/chat/send', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({message: message})
+        })
+        .then(response => response.json())
+        .then(data => {
+            addMessage('bot', data.bot_response);
+        });
+    }
+}
+
+function askQuestion(question) {
+    document.getElementById('messageInput').value = question;
+    sendMessage();
+}
+
+function addMessage(sender, text) {
+    const chatMessages = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}-message`;
+    messageDiv.textContent = text;
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Enter key to send
+document.getElementById('messageInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
+</script>
+
+<style>
+.chat-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.chat-messages {
+    height: 400px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    overflow-y: auto;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.user-message {
+    background-color: #007bff;
+    color: white;
+    margin-left: 50px;
+}
+
+.bot-message {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    margin-right: 50px;
+}
+
+.chat-input {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.chat-input button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.suggested-questions button {
+    margin: 5px;
+    padding: 8px 15px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+</style>
+{% endblock %}

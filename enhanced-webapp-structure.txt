@@ -1,0 +1,8 @@
+﻿=== ENHANCED WEB APP STRUCTURE ===
+Generated: 10/29/2025 20:50:01
+Path: C:\Users\alphaus.nkandu\Desktop\Mae's projects\CavendishSchoolPortal-
+
+=== DETECTED TECHNOLOGIES ===
+Python: 1
+
+=== FILE TREE ===
