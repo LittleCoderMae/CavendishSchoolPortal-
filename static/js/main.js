@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     });
 
-    // Form validation enhancements
+    // Form validation enhancements 
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
         form.addEventListener('submit', function(e) {
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Course registration checkboxes limit
     const courseCheckboxes = document.querySelectorAll('input[name="courses"]');
     if (courseCheckboxes.length > 0) {
-        const maxCourses = 6; // Maximum courses per semester
+        const maxCourses = 6; // Maximum courses per semester, ine i dont know if its 6 or 7 but this work for now mweh lol
         courseCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 const checkedCount = document.querySelectorAll('input[name="courses"]:checked').length;
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Print docket functionality
+    // Print docket functionality , if you nod reacched the threshhold ninshi kwapwa waya gloria lol
     const printButtons = document.querySelectorAll('.btn-success:contains("Print Docket")');
     printButtons.forEach(button => {
         button.addEventListener('click', function() {
