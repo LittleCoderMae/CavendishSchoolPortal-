@@ -1,8 +1,11 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify, send_file
 from flask_login import login_required, current_user
 from database.database import db
-from models.user import User, UserRole, Payment, Result  # Updated imports
-# from models.course import Course  # REMOVE OR COMMENT THIS LINE
+from models.user import User, UserRole, Payment, Result
+from datetime import datetime
+from io import BytesIO
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 
 student_bp = Blueprint('student', __name__)
 
@@ -15,7 +18,7 @@ def dashboard():
     
     # Get student's recent data
     recent_payments = Payment.query.filter_by(user_id=current_user.id).order_by(Payment.payment_date.desc()).limit(5).all()
-    recent_results = Result.query.filter_by(user_id=current_user.id).order_by(Result.academic_year.desc()).limit(5).all()
+    recent_results = Result.query.filter_by(user_id=current_user.id).order_by(Result.created_at.desc()).limit(5).all()
     
     return render_template('student/dashboard.html', 
                          student=current_user,
@@ -120,6 +123,67 @@ def profile():
         return redirect(url_for('auth.login'))
     
     return render_template('student/profile.html', student=current_user)
+
+@student_bp.route('/registration-slip')
+@login_required
+def registration_slip():
+    """Download registration slip"""
+    if not current_user.is_student():
+        flash('Access denied. Students only.', 'error')
+        return redirect(url_for('auth.login'))
+    
+    # Create a simple PDF registration slip
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    
+    # Add content to PDF
+    p.drawString(100, 750, "CAVENDISH UNIVERSITY ZAMBIA")
+    p.drawString(100, 730, "STUDENT REGISTRATION SLIP")
+    p.drawString(100, 700, f"Student ID: {current_user.student_id}")
+    p.drawString(100, 680, f"Name: {current_user.first_name} {current_user.last_name}")
+    p.drawString(100, 660, f"Program: {current_user.program}")
+    p.drawString(100, 640, f"Year: {current_user.year_of_study}")
+    p.drawString(100, 620, f"Date: {datetime.now().strftime('%Y-%m-%d')}")
+    p.drawString(100, 600, "This is your official registration slip.")
+    
+    p.showPage()
+    p.save()
+    
+    buffer.seek(0)
+    return send_file(buffer, as_attachment=True, download_name=f"registration_slip_{current_user.student_id}.pdf", mimetype='application/pdf')
+
+@student_bp.route('/timetable')
+@login_required
+def timetable():
+    """Download timetable"""
+    if not current_user.is_student():
+        flash('Access denied. Students only.', 'error')
+        return redirect(url_for('auth.login'))
+    
+    # Create a simple PDF timetable
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    
+    # Add content to PDF
+    p.drawString(100, 750, "CAVENDISH UNIVERSITY ZAMBIA")
+    p.drawString(100, 730, "STUDENT TIMETABLE")
+    p.drawString(100, 700, f"Student ID: {current_user.student_id}")
+    p.drawString(100, 680, f"Name: {current_user.first_name} {current_user.last_name}")
+    p.drawString(100, 660, f"Program: {current_user.program}")
+    p.drawString(100, 640, "Academic Year: 2024")
+    
+    # Sample timetable
+    p.drawString(100, 600, "Monday: Computer Science 09:00-11:00")
+    p.drawString(100, 580, "Tuesday: Mathematics 10:00-12:00")
+    p.drawString(100, 560, "Wednesday: Physics 08:00-10:00")
+    p.drawString(100, 540, "Thursday: Programming 14:00-16:00")
+    p.drawString(100, 520, "Friday: Research Methods 11:00-13:00")
+    
+    p.showPage()
+    p.save()
+    
+    buffer.seek(0)
+    return send_file(buffer, as_attachment=True, download_name=f"timetable_{current_user.student_id}.pdf", mimetype='application/pdf')
 
 # ------------------------------------------------------------
 # HELPER FUNCTIONS

@@ -1,5 +1,4 @@
-# models/user.py
-from database.database import db  # Import from your central db instance
+from database.database import db
 from flask_login import UserMixin
 from datetime import datetime
 import enum
@@ -23,6 +22,7 @@ class User(UserMixin, db.Model):
     student_id = db.Column(db.String(20), unique=True, nullable=True)
     program = db.Column(db.String(100), nullable=True)
     year_of_study = db.Column(db.Integer, nullable=True)
+    semester = db.Column(db.Integer, default=1)  # Added semester field
     
     # Lecturer-specific fields
     staff_id = db.Column(db.String(20), unique=True, nullable=True)
@@ -31,10 +31,11 @@ class User(UserMixin, db.Model):
     # Common fields
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Relationships
-    payments = db.relationship('Payment', backref='user', lazy=True)
-    results = db.relationship('Result', backref='user', lazy=True)
+    payments = db.relationship('Payment', backref='user', lazy=True, order_by="desc(Payment.payment_date)")
+    results = db.relationship('Result', backref='user', lazy=True, order_by="desc(Result.created_at)")
     chat_messages = db.relationship('ChatMessage', backref='user', lazy=True)
     chat_sessions = db.relationship('ChatSession', backref='user', lazy=True)
     
@@ -46,6 +47,9 @@ class User(UserMixin, db.Model):
     
     def is_admin(self):
         return self.role == UserRole.ADMIN
+
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
 
 class Payment(db.Model):
     __tablename__ = 'payments'
@@ -61,6 +65,7 @@ class Payment(db.Model):
     semester = db.Column(db.Integer, nullable=True)
     status = db.Column(db.String(20), default='pending')
     payment_date = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Added for consistency
     
     def __repr__(self):
         return f'<Payment {self.transaction_id}: {self.amount} by User {self.user_id}>'

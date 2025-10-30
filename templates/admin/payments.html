@@ -1,54 +1,75 @@
-<!-- templates/admin/payments.html -->
 {% extends "base.html" %}
 
-{% block title %}Payment Management{% endblock %}
+{% block title %}Payment Management - Admin Panel{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2>Payment Management</h2>
-        <div class="card">
-            <div class="card-body">
-                {% if payments %}
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Student ID</th>
-                                <th>Transaction ID</th>
-                                <th>Type</th>
-                                <th>Amount (K)</th>
-                                <th>Method</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for payment in payments %}
-                            <tr>
-                                <td>{{ payment.created_at.strftime('%Y-%m-%d') }}</td>
-                                <td>{{ payment.student.student_id }}</td>
-                                <td>{{ payment.transaction_id }}</td>
-                                <td>{{ payment.payment_type|replace('_', ' ')|title }}</td>
-                                <td>{{ "%.2f"|format(payment.amount) }}</td>
-                                <td>{{ payment.payment_method|replace('_', ' ')|title }}</td>
-                                <td>
-                                    <span class="badge bg-{{ 'success' if payment.status == 'completed' else 'warning' }}">
-                                        {{ payment.status|title }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-info">Details</button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Payment Management</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5>Total Revenue</h5>
+                    <h3>K{{ "%.2f"|format(total_revenue) }}</h3>
                 </div>
-                {% else %}
-                <p class="text-muted">No payments found.</p>
-                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5>Pending Amount</h5>
+                    <h3>K{{ "%.2f"|format(pending_amount) }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5>Total Payments</h5>
+                    <h3>{{ payments|length }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Student</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in payments %}
+                        <tr>
+                            <td>{{ payment.transaction_id }}</td>
+                            <td>{{ payment.user.first_name }} {{ payment.user.last_name }}</td>
+                            <td>K{{ "%.2f"|format(payment.amount) }}</td>
+                            <td>{{ payment.description }}</td>
+                            <td>
+                                {% if payment.payment_date %}
+                                    {{ payment.payment_date.strftime('%Y-%m-%d') }}
+                                {% else %}
+                                    <span class="text-muted">Not set</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge badge-{{ 'success' if payment.status == 'completed' else 'warning' if payment.status == 'pending' else 'danger' }}">
+                                    {{ payment.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

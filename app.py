@@ -1,4 +1,3 @@
-# app.py - FINAL CLEAN VERSION
 from flask import Flask, render_template
 from flask_login import LoginManager, current_user
 from flask_migrate import Migrate
@@ -11,7 +10,7 @@ from config import DevelopmentConfig
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
 
-# Initialize database - IMPORT db from the same place everywhere
+# Initialize database
 from database.database import db
 db.init_app(app)
 
@@ -24,28 +23,36 @@ login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 login_manager.login_message_category = 'info'
 
-# User loader MUST be defined
+# User loader
 @login_manager.user_loader
 def load_user(user_id):
     from models.user import User
     return User.query.get(int(user_id))
 
 # Register blueprints
-from routes.auth import auth_bp
-from routes.student import student_bp
-from routes.lecturer import lecturer_bp
-from routes.admin import admin_bp
-from routes.payment import payment_bp
-from routes.results import results_bp
+def register_blueprints():
+    try:
+        from routes.auth import auth_bp
+        from routes.student import student_bp
+        from routes.lecturer import lecturer_bp
+        from routes.admin import admin_bp
+        from routes.payment import payment_bp
+        from routes.results import results_bp
+        from routes.chatbot import chatbot_bp
 
-app.register_blueprint(auth_bp, url_prefix='/auth')
-app.register_blueprint(student_bp, url_prefix='/student')
-app.register_blueprint(lecturer_bp, url_prefix='/lecturer')
-app.register_blueprint(admin_bp, url_prefix='/admin')
-app.register_blueprint(payment_bp, url_prefix='/payment')
-app.register_blueprint(results_bp, url_prefix='/results')
+        app.register_blueprint(auth_bp, url_prefix='/auth')
+        app.register_blueprint(student_bp, url_prefix='/student')
+        app.register_blueprint(lecturer_bp, url_prefix='/lecturer')
+        app.register_blueprint(admin_bp, url_prefix='/admin')
+        app.register_blueprint(payment_bp, url_prefix='/payment')
+        app.register_blueprint(results_bp, url_prefix='/results')
+        app.register_blueprint(chatbot_bp, url_prefix='/chatbot')
+        
+        print("✅ All blueprints registered successfully")
+    except Exception as e:
+        print(f"❌ Error registering blueprints: {e}")
 
-# Routes
+# Basic routes
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -86,6 +93,9 @@ def create_demo_users():
     with app.app_context():
         try:
             from models.user import User, UserRole
+            
+            # Create tables first
+            db.create_all()
             
             # Create default admin user if doesn't exist
             admin_user = User.query.filter_by(email='admin@cavendish.edu.zm').first()
@@ -137,8 +147,10 @@ def create_demo_users():
         except Exception as e:
             print(f"❌ Error creating demo users: {str(e)}")
 
-# Create demo users when starting the app
-create_demo_users()
+# Initialize the app
+with app.app_context():
+    register_blueprints()
+    create_demo_users()
 
 if __name__ == '__main__':
     print("🚀 Starting Cavendish School Portal...")

@@ -1,4 +1,3 @@
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,24 +8,28 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-blue: #120488c3;
-            --secondary-blue: #120488c3;
-            --accent-blue: #120488c3;
+            --primary-blue: #120488;
+            --secondary-blue: #0d0666;
+            --accent-blue: #1a0fcc;
             --light-blue: #e8f0fe;
         }
         
         .bg-primary {
-            background-color: var(--primary-blue) !important;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%) !important;
         }
         
         .btn-primary {
-            background-color: var(--primary-blue);
-            border-color: var(--primary-blue);
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
         
         .btn-primary:hover {
-            background-color: var(--secondary-blue);
-            border-color: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(18, 4, 136, 0.3);
         }
         
         .text-primary {
@@ -43,34 +46,44 @@
         .navbar-brand img {
             height: 50px;
             margin-right: 10px;
+            border-radius: 8px;
         }
         
         .nav-link {
             font-weight: 500;
             padding: 0.5rem 1rem !important;
-            border-radius: 4px;
+            border-radius: 6px;
             margin: 0 2px;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
         }
         
         .navbar-nav .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
         }
         
         .user-welcome {
             border-left: 1px solid rgba(255, 255, 255, 0.3);
             padding-left: 15px;
             margin-left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .footer {
-            background: linear-gradient(to right, #0d2b5c, var(--primary-blue));
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
             color: white;
             padding: 3rem 0 1.5rem;
+            margin-top: auto;
         }
         
         .footer h5 {
@@ -96,11 +109,13 @@
             display: block;
             margin-bottom: 0.5rem;
             transition: all 0.3s;
+            padding: 4px 0;
         }
         
         .footer-links a:hover {
             color: white;
-            padding-left: 5px;
+            padding-left: 8px;
+            transform: translateX(5px);
         }
         
         .footer-contact p {
@@ -113,6 +128,7 @@
             margin-right: 10px;
             margin-top: 3px;
             color: var(--accent-blue);
+            width: 16px;
         }
         
         .footer-bottom {
@@ -122,7 +138,9 @@
         }
         
         .social-icons a {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             width: 36px;
             height: 36px;
             background-color: rgba(255, 255, 255, 0.1);
@@ -132,38 +150,112 @@
             margin-right: 10px;
             color: white;
             transition: all 0.3s;
+            text-decoration: none;
         }
         
         .social-icons a:hover {
             background-color: var(--accent-blue);
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.1);
         }
         
         .main-content {
             min-height: calc(100vh - 180px);
+            display: flex;
+            flex-direction: column;
         }
         
         .alert {
             border: none;
             border-radius: 8px;
+            border-left: 4px solid;
         }
         
         .alert-danger {
             background-color: #ffe6e6;
             color: #b00020;
+            border-left-color: #b00020;
         }
         
         .alert-success {
             background-color: #e6f4ea;
             color: #137333;
+            border-left-color: #137333;
+        }
+        
+        .alert-info {
+            background-color: #e7f3ff;
+            color: #004085;
+            border-left-color: #004085;
+        }
+        
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-left-color: #856404;
+        }
+        
+        /* Role badges */
+        .role-badge {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--primary-blue) 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Loading animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Fix for mobile responsiveness */
+        @media (max-width: 768px) {
+            .navbar-brand span {
+                font-size: 1.2rem;
+            }
+            
+            .user-welcome {
+                border-left: none;
+                padding-left: 0;
+                margin-left: 0;
+                margin-top: 10px;
+                justify-content: center;
+            }
+            
+            .footer .row > div {
+                margin-bottom: 2rem;
+            }
+        }
+
+        /* Ensure proper spacing for main content */
+        .container.mt-4 {
+            flex: 1;
         }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="/static/images/logo1.jpg" alt="Cavendish University Logo">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='images/logo1.jpg') }}" alt="Cavendish University Logo" onerror="this.style.display='none'">
                 <span>Cavendish University Zambia</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -172,42 +264,55 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item d-flex align-items-center user-welcome">
-                            <span class="navbar-text">
-                                <i class="fas fa-user-circle me-1"></i> Welcome, {{ current_user.username }} ({{ current_user.role }})
+                        <!-- User welcome section -->
+                        <li class="nav-item user-welcome">
+                            <span class="text-white">
+                                <i class="fas fa-user"></i>
+                                Welcome, {{ current_user.first_name }}
+                                <span class="role-badge ms-2">{{ current_user.role.value }}</span>
                             </span>
                         </li>
-                        {% if current_user.role == 'student' %}
-                            <li class="nav-item"><a class="nav-link" href="/student/dashboard"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/student/registration"><i class="fas fa-clipboard-list me-1"></i> Course Registration</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/student/payments"><i class="fas fa-credit-card me-1"></i> Payments</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/student/results"><i class="fas fa-chart-line me-1"></i> Results</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/student/dockets"><i class="fas fa-file-alt me-1"></i> Exam Dockets</a></li>
-                        {% elif current_user.role == 'admin' %}
-                            <li class="nav-item"><a class="nav-link" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/admin/students"><i class="fas fa-users me-1"></i> Students</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/admin/payments"><i class="fas fa-credit-card me-1"></i> Payments</a></li>
-                        {% elif current_user.role == 'lecturer' %}
-                            <li class="nav-item"><a class="nav-link" href="/lecturer/dashboard"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/lecturer/results"><i class="fas fa-chart-line me-1"></i> Results</a></li>
+                        
+                        <!-- Role-specific navigation -->
+                        {% if current_user.role.value == 'student' %}
+                            <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint and 'student.dashboard' in request.endpoint }}" href="{{ url_for('student.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint and 'student.registration' in request.endpoint }}" href="{{ url_for('student.registration') }}"><i class="fas fa-clipboard-list"></i> Course Registration</a></li>
+                            <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint and 'student.payments' in request.endpoint }}" href="{{ url_for('student.payments') }}"><i class="fas fa-credit-card"></i> Payments</a></li>
+                            <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint and 'student.results' in request.endpoint }}" href="{{ url_for('student.results') }}"><i class="fas fa-chart-line"></i> Results</a></li>
+                            <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint and 'student.dockets' in request.endpoint }}" href="{{ url_for('student.dockets') }}"><i class="fas fa-file-alt"></i> Exam Dockets</a></li>
+                        {% elif current_user.role.value == 'admin' %}
+                            <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint and 'admin.dashboard' in request.endpoint }}" href="{{ url_for('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint and 'admin.students' in request.endpoint }}" href="{{ url_for('admin.students') }}"><i class="fas fa-users"></i> Students</a></li>
+                            <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint and 'admin.payments' in request.endpoint }}" href="{{ url_for('admin.payments') }}"><i class="fas fa-credit-card"></i> Payments</a></li>
+                            <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint and 'admin.users' in request.endpoint }}" href="{{ url_for('admin.users') }}"><i class="fas fa-cog"></i> Users</a></li>
+                        {% elif current_user.role.value == 'lecturer' %}
+                            <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint and 'lecturer.dashboard' in request.endpoint }}" href="{{ url_for('lecturer.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint and 'lecturer.students' in request.endpoint }}" href="{{ url_for('lecturer.students') }}"><i class="fas fa-users"></i> Students</a></li>
+                            <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint and 'lecturer.results' in request.endpoint }}" href="{{ url_for('lecturer.results') }}"><i class="fas fa-chart-line"></i> Results</a></li>
                         {% endif %}
-                        <li class="nav-item"><a class="nav-link" href="/auth/logout"><i class="fas fa-sign-out-alt me-1"></i> Logout</a></li>
+                        
+                        <!-- Common navigation -->
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                     {% else %}
-                        <li class="nav-item"><a class="nav-link" href="/auth/login"><i class="fas fa-sign-in-alt me-1"></i> Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/auth/register"><i class="fas fa-user-plus me-1"></i> Register</a></li>
+                        <!-- Public navigation -->
+                        <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint == 'auth.login' }}" href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                        <li class="nav-item"><a class="nav-link {{ 'active' if request.endpoint == 'auth.register' }}" href="{{ url_for('auth.register') }}"><i class="fas fa-user-plus"></i> Register</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/about"><i class="fas fa-info-circle"></i> About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/contact"><i class="fas fa-envelope"></i> Contact</a></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="main-content">
+    <main class="main-content">
         <div class="container mt-4">
+            <!-- Flash Messages -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
                         <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show">
-                            <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' }} me-2"></i>
+                            <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' if category == 'success' else 'info-circle' }} me-2"></i>
                             {{ message }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
@@ -215,9 +320,10 @@
                 {% endif %}
             {% endwith %}
 
+            <!-- Main Content -->
             {% block content %}{% endblock %}
         </div>
-    </div>
+    </main>
 
     <footer class="footer">
         <div class="container">
@@ -226,27 +332,27 @@
                     <h5>About Cavendish University Zambia</h5>
                     <p>Providing excellence in education since 2004. Our institution is committed to nurturing future leaders through innovative teaching and comprehensive student support.</p>
                     <div class="social-icons mt-3">
-                        <a href="https://www.facebook.com/share/17YVMdhwVK/?mibextid=wwXIfr"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://www.instagram.com/cavendishuniversityzambia/?utm_source=ig_web_button_share_sheet"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.cavendishza.org/programmes/bachelors-degrees/"><i class="fab fa-website"></i></a>
-                        <a href="https://www.linkedin.com/company/cavendish-university-zambia-cuz/"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.facebook.com/share/17YVMdhwVK/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/cavendishuniversityzambia/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.cavendishza.org/" target="_blank"><i class="fas fa-globe"></i></a>
+                        <a href="https://www.linkedin.com/company/cavendish-university-zambia-cuz/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
                 <div class="col-md-2 mb-4">
                     <h5>Quick Links</h5>
                     <div class="footer-links">
-                        <a href="/">Home</a>
+                        <a href="{{ url_for('index') }}">Home</a>
                         {% if current_user.is_authenticated %}
-                            {% if current_user.role == 'student' %}
-                                <a href="/student/dashboard">Student Portal</a>
-                            {% elif current_user.role == 'admin' %}
-                                <a href="/admin/dashboard">Admin Portal</a>
-                            {% elif current_user.role == 'lecturer' %}
-                                <a href="/lecturer/dashboard">Lecturer Portal</a>
+                            {% if current_user.role.value == 'student' %}
+                                <a href="{{ url_for('student.dashboard') }}">Student Portal</a>
+                            {% elif current_user.role.value == 'admin' %}
+                                <a href="{{ url_for('admin.dashboard') }}">Admin Portal</a>
+                            {% elif current_user.role.value == 'lecturer' %}
+                                <a href="{{ url_for('lecturer.dashboard') }}">Lecturer Portal</a>
                             {% endif %}
                         {% else %}
-                            <a href="/auth/login">Login</a>
-                            <a href="/auth/register">Register</a>
+                            <a href="{{ url_for('auth.login') }}">Login</a>
+                            <a href="{{ url_for('auth.register') }}">Register</a>
                         {% endif %}
                         <a href="#">Academic Calendar</a>
                         <a href="#">Library</a>
@@ -264,9 +370,10 @@
                 </div>
                 <div class="col-md-3 mb-4">
                     <h5>Contact Us</h5>
-                    <div class="footer-contact">H7WH+MFX Corner of and Elizabeth, Great N Road, Lusaka
+                    <div class="footer-contact">
+                        <p><i class="fas fa-map-marker-alt"></i> H7WH+MFX Corner of Elizabeth & Great North Road, Lusaka</p>
                         <p><i class="fas fa-phone"></i> +260-211-387-600</p>
-                        <p><i class="fas fa-envelope"></i> info@cavendish.edu</p>
+                        <p><i class="fas fa-envelope"></i> info@cavendish.edu.zm</p>
                         <p><i class="fas fa-clock"></i> Mon-Fri: 8:00 AM - 6:00 PM</p>
                     </div>
                 </div>
@@ -274,7 +381,7 @@
             <div class="footer-bottom">
                 <div class="row">
                     <div class="col-md-6">
-                        <p>&copy; 2025 CUZ Management Portal. All rights reserved.</p>
+                        <p>&copy; 2025 Cavendish University Zambia. All rights reserved.</p>
                     </div>
                     <div class="col-md-6 text-md-end">
                         <a href="#" class="text-white me-3">Privacy Policy</a>
@@ -286,7 +393,42 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/js/main.js"></script>
+    
+    <!-- Loading states for buttons -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add loading states to all buttons with btn-primary class
+            const buttons = document.querySelectorAll('.btn-primary');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Only apply loading state to form submission buttons, not navigation links
+                    if (this.type === 'submit' || this.getAttribute('onclick')) {
+                        const originalText = this.innerHTML;
+                        this.innerHTML = '<span class="loading-spinner"></span> Loading...';
+                        this.disabled = true;
+                        
+                        // Revert after 5 seconds if still loading
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.disabled = false;
+                        }, 5000);
+                    }
+                });
+            });
+
+            // Auto-dismiss alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    if (alert) {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }
+                }, 5000);
+            });
+        });
+    </script>
+    
     {% block scripts %}{% endblock %}
 </body>
 </html>

@@ -1,52 +1,118 @@
-<!-- templates/student/results.html -->
 {% extends "base.html" %}
 
-{% block title %}Academic Results{% endblock %}
+{% block title %}Academic Results - Student Portal{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2>Academic Results</h2>
-        <div class="card">
-            <div class="card-body">
-                {% if results %}
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Course Code</th>
-                                <th>Course Name</th>
-                                <th>CAT 1</th>
-                                <th>CAT 2</th>
-                                <th>Final Exam</th>
-                                <th>Total</th>
-                                <th>Grade</th>
-                                <th>Grade Point</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for result in results %}
-                            <tr>
-                                <td>{{ result.course.course_code }}</td>
-                                <td>{{ result.course.course_name }}</td>
-                                <td>{{ "%.1f"|format(result.cat1_marks) }}</td>
-                                <td>{{ "%.1f"|format(result.cat2_marks) }}</td>
-                                <td>{{ "%.1f"|format(result.final_exam_marks) }}</td>
-                                <td><strong>{{ "%.1f"|format(result.total_marks) }}</strong></td>
-                                <td>
-                                    <span class="badge bg-{{ 'success' if result.grade in ['A','B','C'] else 'warning' if result.grade == 'D' else 'danger' }}">
-                                        {{ result.grade }}
-                                    </span>
-                                </td>
-                                <td>{{ "%.1f"|format(result.grade_point) }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Academic Results</h1>
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-download fa-sm text-white-50"></i> Download Transcript
+        </a>
+    </div>
+
+    <!-- Results Summary -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Average Marks</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ "%.1f"|format(average_marks) }}%</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
                 </div>
-                {% else %}
-                <p class="text-muted">No results published yet.</p>
-                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Courses Completed</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ results|length }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-book fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Table -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Course Results</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Course Name</th>
+                            <th>Grade</th>
+                            <th>Marks (%)</th>
+                            <th>Semester</th>
+                            <th>Academic Year</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in results %}
+                        <tr>
+                            <td><strong>{{ result.course_code }}</strong></td>
+                            <td>{{ result.course_name }}</td>
+                            <td>
+                                <span class="badge badge-{{ 'success' if result.grade in ['A','B','C'] else 'warning' if result.grade in ['D','E'] else 'danger' }} p-2">
+                                    {{ result.grade }}
+                                </span>
+                            </td>
+                            <td>{{ result.marks }}</td>
+                            <td>Semester {{ result.semester }}</td>
+                            <td>{{ result.academic_year }}</td>
+                            <td>
+                                <span class="badge badge-success">Completed</span>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">No results available</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grade Legend -->
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Grading System</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Undergraduate Grading Scale:</h6>
+                    <ul class="list-unstyled">
+                        <li><span class="badge badge-success p-2">A</span> 80-100% - Excellent</li>
+                        <li><span class="badge badge-success p-2">B</span> 70-79% - Very Good</li>
+                        <li><span class="badge badge-success p-2">C</span> 60-69% - Good</li>
+                        <li><span class="badge badge-warning p-2">D</span> 50-59% - Satisfactory</li>
+                        <li><span class="badge badge-warning p-2">E</span> 40-49% - Pass</li>
+                        <li><span class="badge badge-danger p-2">F</span> 0-39% - Fail</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

@@ -1,79 +1,135 @@
-<!-- templates/student/payments.html -->
 {% extends "base.html" %}
 
-{% block title %}Payments{% endblock %}
+{% block title %}Payments - Student Portal{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-8">
-        <h2>Payment History</h2>
-        <div class="card">
-            <div class="card-body">
-                {% if payments %}
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Transaction ID</th>
-                                <th>Type</th>
-                                <th>Amount (K)</th>
-                                <th>Method</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for payment in payments %}
-                            <tr>
-                                <td>{{ payment.created_at.strftime('%Y-%m-%d') }}</td>
-                                <td>{{ payment.transaction_id }}</td>
-                                <td>{{ payment.payment_type|replace('_', ' ')|title }}</td>
-                                <td>{{ "%.2f"|format(payment.amount) }}</td>
-                                <td>{{ payment.payment_method|replace('_', ' ')|title }}</td>
-                                <td>
-                                    <span class="badge bg-{{ 'success' if payment.status == 'completed' else 'warning' }}">
-                                        {{ payment.status|title }}
-                                    </span>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Payment History</h1>
+        <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#paymentModal">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Make New Payment
+        </button>
+    </div>
+
+    <!-- Payment Summary -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Paid</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">K{{ "%.2f"|format(total_paid) }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
                 </div>
-                {% else %}
-                <p class="text-muted">No payment history found.</p>
-                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Pending Payments</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">K{{ "%.2f"|format(total_pending) }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Total Transactions</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ payments|length }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-receipt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    
-    <div class="col-md-4">
-        <h2>Make Payment</h2>
-        <div class="card">
-            <div class="card-body">
-                <form method="POST" action="{{ url_for('payment.make_payment') }}">
-                    <div class="mb-3">
-                        <label for="amount" class="form-label">Amount (K)</label>
-                        <input type="number" class="form-control" id="amount" name="amount" step="0.01" min="1" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="payment_type" class="form-label">Payment Type</label>
-                        <select class="form-control" id="payment_type" name="payment_type" required>
-                            <option value="tuition">Tuition Fees</option>
-                            <option value="module_registration">Module Registration</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="payment_method" class="form-label">Payment Method</label>
-                        <select class="form-control" id="payment_method" name="payment_method" required>
-                            <option value="mobile_money">Mobile Money</option>
-                            <option value="bank_transfer">Bank Transfer</option>
-                            <option value="cash">Cash</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Make Payment</button>
-                </form>
+
+    <!-- Payments Table -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Payment History</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Transaction ID</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in payments %}
+                        <tr>
+                            <td>{{ payment.payment_date.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ payment.description }}</td>
+                            <td>{{ payment.payment_type }}</td>
+                            <td>K{{ "%.2f"|format(payment.amount) }}</td>
+                            <td>{{ payment.payment_method }}</td>
+                            <td><code>{{ payment.transaction_id }}</code></td>
+                            <td>
+                                <span class="badge badge-{{ 'success' if payment.status == 'completed' else 'warning' if payment.status == 'pending' else 'danger' }}">
+                                    {{ payment.status|title }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">No payment records found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">Make New Payment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Payment integration would go here. For demo purposes, payments are simulated.</p>
+                <div class="alert alert-info">
+                    <strong>Demo Notice:</strong> This is a simulation. In a real application, this would integrate with payment gateways like MTN Mobile Money, Airtel Money, or Bank transfers.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Proceed to Payment</button>
             </div>
         </div>
     </div>

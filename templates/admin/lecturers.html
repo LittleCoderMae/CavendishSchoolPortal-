@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Lecturers - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Manage Lecturers ({{ lecturers|length }})</h1>
+    
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Staff ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lecturer in lecturers %}
+                        <tr>
+                            <td>{{ lecturer.staff_id or 'N/A' }}</td>
+                            <td>{{ lecturer.first_name }} {{ lecturer.last_name }}</td>
+                            <td>{{ lecturer.email }}</td>
+                            <td>{{ lecturer.department or 'N/A' }}</td>
+                            <td>
+                                <span class="badge badge-{{ 'success' if lecturer.is_active else 'danger' }}">
+                                    {{ 'Active' if lecturer.is_active else 'Inactive' }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

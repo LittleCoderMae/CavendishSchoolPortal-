@@ -1,144 +1,89 @@
-<!-- templates/student/dockets.html -->
 {% extends "base.html" %}
 
-{% block title %}Exam Dockets{% endblock %}
+{% block title %}Exam Dockets - Student Portal{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2>Exam Dockets</h2>
-        
-        <!-- Docket Printing Fee Payment -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5>Docket Printing Fee</h5>
-            </div>
-            <div class="card-body">
-                {% if docket_fee_paid %}
-                <div class="alert alert-success">
-                    <h6>✅ Docket Printing Fee Paid</h6>
-                    <p>You have paid the K5 docket printing fee. You can now print your exam dockets.</p>
-                </div>
-                {% else %}
-                <div class="alert alert-warning">
-                    <h6>⚠️ Docket Printing Fee Required</h6>
-                    <p>You need to pay K5.00 to enable docket printing.</p>
-                    <form method="POST" action="{{ url_for('payment.pay_docket_fee') }}">
-                        <button type="submit" class="btn btn-primary">Pay K5 Docket Fee</button>
-                    </form>
-                </div>
-                {% endif %}
-            </div>
-        </div>
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Exam Dockets</h1>
+    </div>
 
-        <!-- Exam Docket Status -->
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card {{ 'border-success' if cat1_eligible else 'border-secondary' }}">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">CAT 1 Docket</h5>
-                        {% if cat1_eligible and docket_fee_paid %}
-                        <div class="alert alert-success">
-                            <p>✅ Eligible for printing</p>
-                            <button class="btn btn-success">Print Docket</button>
-                        </div>
-                        {% else %}
-                        <div class="alert alert-{{ 'warning' if cat1_eligible else 'danger' }}">
-                            {% if not cat1_eligible %}
-                            <p>❌ Requires 50% fee payment</p>
-                            {% elif not docket_fee_paid %}
-                            <p>❌ Pay K5 docket fee first</p>
-                            {% endif %}
-                            <button class="btn btn-secondary" disabled>Print Docket</button>
-                        </div>
-                        {% endif %}
-                    </div>
+    <!-- Docket Fee Status -->
+    <div class="row mb-4">
+        <div class="col-lg-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Docket Printing Status</h6>
                 </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="card {{ 'border-success' if cat2_eligible else 'border-secondary' }}">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">CAT 2 Docket</h5>
-                        {% if cat2_eligible and docket_fee_paid %}
-                        <div class="alert alert-success">
-                            <p>✅ Eligible for printing</p>
-                            <button class="btn btn-success">Print Docket</button>
-                        </div>
-                        {% else %}
-                        <div class="alert alert-{{ 'warning' if cat2_eligible else 'danger' }}">
-                            {% if not cat2_eligible %}
-                            <p>❌ Requires 75% fee payment</p>
-                            {% elif not docket_fee_paid %}
-                            <p>❌ Pay K5 docket fee first</p>
-                            {% endif %}
-                            <button class="btn btn-secondary" disabled>Print Docket</button>
-                        </div>
-                        {% endif %}
+                <div class="card-body">
+                    {% if docket_fee_paid %}
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> 
+                        <strong>Docket fee paid!</strong> You can now print your exam dockets.
                     </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="card {{ 'border-success' if final_eligible else 'border-secondary' }}">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Final Exam Docket</h5>
-                        {% if final_eligible and docket_fee_paid %}
-                        <div class="alert alert-success">
-                            <p>✅ Eligible for printing</p>
-                            <button class="btn btn-success">Print Docket</button>
-                        </div>
-                        {% else %}
-                        <div class="alert alert-{{ 'warning' if final_eligible else 'danger' }}">
-                            {% if not final_eligible %}
-                            <p>❌ Requires 100% fee payment</p>
-                            {% elif not docket_fee_paid %}
-                            <p>❌ Pay K5 docket fee first</p>
-                            {% endif %}
-                            <button class="btn btn-secondary" disabled>Print Docket</button>
-                        </div>
-                        {% endif %}
+                    {% else %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Docket fee not paid.</strong> Please pay the docket printing fee to access your exam dockets.
+                        <a href="{{ url_for('student.payments') }}" class="btn btn-sm btn-success ml-2">Pay Now</a>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Payment Summary -->
-        <div class="card mt-4">
-            <div class="card-header">
-                <h5>Payment Summary</h5>
+    <!-- Exam Eligibility -->
+    <div class="row">
+        {% for exam_type, eligible in [('CAT 1', cat1_eligible), ('CAT 2', cat2_eligible), ('Final Exam', final_eligible)] %}
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-{{ 'success' if eligible else 'secondary' }} shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-{{ 'success' if eligible else 'secondary' }} text-uppercase mb-1">
+                                {{ exam_type }} Eligibility</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {% if eligible %}
+                                <span class="text-success">Eligible</span>
+                                {% else %}
+                                <span class="text-secondary">Not Eligible</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-{{ 'check-circle' if eligible else 'times-circle' }} fa-2x text-{{ 'success' if eligible else 'secondary' }}"></i>
+                        </div>
+                    </div>
+                    {% if eligible and docket_fee_paid %}
+                    <div class="mt-2">
+                        <button class="btn btn-sm btn-outline-primary">Print {{ exam_type }} Docket</button>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-            <div class="card-body">
-                {% set total_fees = student.registered_courses|sum(attribute='fee_amount') %}
-                {% set total_paid = student.payments|selectattr('status', 'equalto', 'completed')|sum(attribute='amount') %}
-                {% set balance = total_fees - total_paid %}
-                
-                <div class="row text-center">
-                    <div class="col-md-4">
-                        <h6>Total Fees</h6>
-                        <h4 class="text-primary">K{{ "%.2f"|format(total_fees) }}</h4>
-                    </div>
-                    <div class="col-md-4">
-                        <h6>Total Paid</h6>
-                        <h4 class="text-success">K{{ "%.2f"|format(total_paid) }}</h4>
-                    </div>
-                    <div class="col-md-4">
-                        <h6>Balance</h6>
-                        <h4 class="text-{{ 'danger' if balance > 0 else 'success' }}">K{{ "%.2f"|format(balance) }}</h4>
-                    </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Exam Instructions -->
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Exam Instructions</h6>
                 </div>
-                
-                <div class="progress mt-3" style="height: 20px;">
-                    {% set payment_percentage = (total_paid / total_fees * 100) if total_fees > 0 else 0 %}
-                    <div class="progress-bar" role="progressbar" style="width: {{ payment_percentage }}%;">
-                        {{ "%.1f"|format(payment_percentage) }}%
+                <div class="card-body">
+                    <ol>
+                        <li>Ensure you have paid all required fees before printing dockets</li>
+                        <li>Bring your student ID and exam docket to all examinations</li>
+                        <li>Arrive at the exam venue at least 30 minutes before start time</li>
+                        <li>No electronic devices are allowed in the exam room</li>
+                        <li>Follow all instructions from invigilators</li>
+                    </ol>
+                    <div class="alert alert-info">
+                        <strong>Note:</strong> Dockets will be available for printing 2 weeks before each examination period.
                     </div>
-                </div>
-                <div class="text-center mt-2">
-                    <small class="text-muted">
-                        Payment Progress: {{ "%.1f"|format(payment_percentage) }}% 
-                        (K{{ "%.2f"|format(total_paid) }} of K{{ "%.2f"|format(total_fees) }})
-                    </small>
                 </div>
             </div>
         </div>

@@ -1,105 +1,100 @@
-<!-- templates/student/registration.html -->
 {% extends "base.html" %}
 
-{% block title %}Course Registration{% endblock %}
+{% block title %}Course Registration - Student Portal{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2>Course Registration</h2>
-        <div class="card">
-            <div class="card-header">
-                <h5>Available Courses for Year {{ student.year_of_study }} - Semester {{ student.semester }}</h5>
-            </div>
-            <div class="card-body">
-                <form method="POST" action="{{ url_for('student.registration') }}">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Select</th>
-                                    <th>Course Code</th>
-                                    <th>Course Name</th>
-                                    <th>Credits</th>
-                                    <th>Fee (K)</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for course in available_courses %}
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="courses" value="{{ course.id }}" 
-                                               {% if course in registered_courses %}checked{% endif %}>
-                                    </td>
-                                    <td>{{ course.course_code }}</td>
-                                    <td>{{ course.course_name }}</td>
-                                    <td>{{ course.credits }}</td>
-                                    <td>{{ "%.2f"|format(course.fee_amount) }}</td>
-                                    <td>
-                                        {% if course in registered_courses %}
-                                            <span class="badge bg-success">Registered</span>
-                                        {% else %}
-                                            <span class="badge bg-secondary">Available</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="mt-3">
-                        <input type="hidden" name="academic_year" value="{{ student.year_of_study }}">
-                        <input type="hidden" name="semester" value="{{ student.semester }}">
-                        <button type="submit" class="btn btn-primary">Submit Registration</button>
-                        <a href="{{ url_for('student.dashboard') }}" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
-            </div>
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Course Registration</h1>
+        <div>
+            <a href="{{ url_for('student.registration_slip') }}" class="btn btn-sm btn-secondary shadow-sm">
+                <i class="fas fa-download fa-sm text-white-50"></i> Registration Slip
+            </a>
+            <a href="{{ url_for('student.timetable') }}" class="btn btn-sm btn-dark shadow-sm ml-2">
+                <i class="fas fa-calendar-alt fa-sm text-white-50"></i> Timetable
+            </a>
         </div>
+    </div>
 
-        {% if registered_courses %}
-        <div class="card mt-4">
-            <div class="card-header">
-                <h5>Currently Registered Courses</h5>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Course Code</th>
-                                <th>Course Name</th>
-                                <th>Credits</th>
-                                <th>Fee (K)</th>
-                                <th>Total Fee</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% set total_fee = [0] %}
-                            {% for course in registered_courses %}
-                            <tr>
-                                <td>{{ course.course_code }}</td>
-                                <td>{{ course.course_name }}</td>
-                                <td>{{ course.credits }}</td>
-                                <td>{{ "%.2f"|format(course.fee_amount) }}</td>
-                                <td>{{ "%.2f"|format(course.fee_amount) }}</td>
-                            </tr>
-                            {% if total_fee.append(total_fee.pop() + course.fee_amount) %}{% endif %}
-                            {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr class="table-primary">
-                                <td colspan="4" class="text-end"><strong>Total Fees:</strong></td>
-                                <td><strong>K{{ "%.2f"|format(total_fee[0]) }}</strong></td>
-                            </tr>
-                        </tfoot>
-                    </table>
+    <!-- Registration Info -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Available Courses - Year {{ student.year_of_study }}</h6>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('student.registration') }}">
+                        <div class="form-group">
+                            <label for="academic_year">Academic Year</label>
+                            <select class="form-control" id="academic_year" name="academic_year" required>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="semester">Semester</label>
+                            <select class="form-control" id="semester" name="semester" required>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                            </select>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <h6>Course Selection</h6>
+                            <p class="mb-0">Course registration functionality will be available once the Course model is implemented. Currently in development.</p>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" disabled>
+                            Submit Registration
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-        {% endif %}
+
+        <div class="col-lg-4">
+            <!-- Student Information -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Student Information</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td><strong>Student ID:</strong></td>
+                            <td>{{ student.student_id }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Name:</strong></td>
+                            <td>{{ student.first_name }} {{ student.last_name }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Program:</strong></td>
+                            <td>{{ student.program }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Year:</strong></td>
+                            <td>Year {{ student.year_of_study }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Registration Status -->
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-warning">Registration Status</h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <i class="fas fa-info-circle fa-2x text-warning mb-3"></i>
+                        <p class="mb-0">Course registration system is currently being developed. Check back soon for updates.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

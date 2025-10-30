@@ -1,83 +1,215 @@
-<!-- templates/student/dashboard.html -->
 {% extends "base.html" %}
 
-{% block title %}Student Dashboard{% endblock %}
+{% block title %}Student Dashboard - Cavendish University{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2>Student Dashboard</h2>
-        <div class="row mt-4">
-            <div class="col-md-3">
-                <div class="card text-white bg-primary mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Student ID</h5>
-                        <p class="card-text h4">{{ student.student_id }}</p>
-                    </div>
-                </div>
+<div class="container-fluid">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="welcome-card p-4 bg-primary text-white rounded">
+                <h2>Welcome back, {{ student.first_name }}!</h2>
+                <p class="mb-0">Student ID: {{ student.student_id }} | Program: {{ student.program }}</p>
             </div>
-            <div class="col-md-3">
-                <div class="card text-white bg-success mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Program</h5>
-                        <p class="card-text">{{ student.program }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-white bg-info mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Year & Semester</h5>
-                        <p class="card-text">Year {{ student.year_of_study }} - Semester {{ student.semester }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-white bg-warning mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Registered Courses</h5>
-                        <p class="card-text h4">{{ student.registered_courses|length }}</p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Payments</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                K{{ "%.2f"|format(payments|sum(attribute='amount') if payments else 0) }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-money-bill-wave fa-2x text-gray-300"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Quick Actions</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <a href="{{ url_for('student.registration') }}" class="btn btn-outline-primary">Course Registration</a>
-                            <a href="{{ url_for('student.payments') }}" class="btn btn-outline-success">Make Payment</a>
-                            <a href="{{ url_for('student.results') }}" class="btn btn-outline-info">View Results</a>
-                            <a href="{{ url_for('student.dockets') }}" class="btn btn-outline-warning">Exam Dockets</a>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Average Marks</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ "%.1f"|format(results|sum(attribute='marks')/results|length if results else 0) }}%
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-chart-line fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Recent Payments</h5>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Completed Courses</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ results|length if results else 0 }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-book fa-2x text-gray-300"></i>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        {% if student.payments %}
-                            {% for payment in student.payments[-3:]|reverse %}
-                                <div class="border-bottom py-2">
-                                    <strong>K{{ "%.2f"|format(payment.amount) }}</strong> - {{ payment.payment_type }}<br>
-                                    <small class="text-muted">{{ payment.created_at.strftime('%Y-%m-%d') }}</small>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <p class="text-muted">No payments made yet.</p>
-                        {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Year of Study</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                Year {{ student.year_of_study }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-graduation-cap fa-2x text-gray-300"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <!-- Quick Actions -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="{{ url_for('student.registration') }}" class="btn btn-primary btn-block">
+                                <i class="fas fa-clipboard-list"></i> Course Registration
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{{ url_for('student.payments') }}" class="btn btn-success btn-block">
+                                <i class="fas fa-credit-card"></i> Make Payment
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{{ url_for('student.results') }}" class="btn btn-info btn-block">
+                                <i class="fas fa-chart-bar"></i> View Results
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{{ url_for('student.dockets') }}" class="btn btn-warning btn-block">
+                                <i class="fas fa-file-alt"></i> Exam Dockets
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{{ url_for('student.registration_slip') }}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-download"></i> Registration Slip
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{{ url_for('student.timetable') }}" class="btn btn-dark btn-block">
+                                <i class="fas fa-calendar-alt"></i> Timetable
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Payments -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Payments</h6>
+                    <a href="{{ url_for('student.payments') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if payments %}
+                        {% for payment in payments %}
+                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                            <div>
+                                <strong>K{{ "%.2f"|format(payment.amount) }}</strong>
+                                <br>
+                                <small class="text-muted">{{ payment.description }}</small>
+                                <br>
+                                <small class="text-muted">{{ payment.payment_date.strftime('%Y-%m-%d') }}</small>
+                            </div>
+                            <span class="badge badge-{{ 'success' if payment.status == 'completed' else 'warning' }}">
+                                {{ payment.status|title }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted text-center">No payments found</p>
+                        <div class="text-center">
+                            <a href="{{ url_for('student.payments') }}" class="btn btn-sm btn-success">Make First Payment</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Recent Results -->
+            <div class="card shadow mt-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-success">Recent Results</h6>
+                    <a href="{{ url_for('student.results') }}" class="btn btn-sm btn-outline-success">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if results %}
+                        {% for result in results %}
+                        <div class="border-bottom pb-2 mb-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong>{{ result.course_code }}</strong>
+                                <span class="badge badge-{{ 'success' if result.grade in ['A','B','C'] else 'warning' if result.grade in ['D','E'] else 'danger' }}">
+                                    {{ result.grade }}
+                                </span>
+                            </div>
+                            <small class="text-muted">{{ result.course_name }}</small>
+                            <br>
+                            <small class="text-muted">Marks: {{ result.marks }}% | {{ result.academic_year }} S{{ result.semester }}</small>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted text-center">No results available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+.welcome-card {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+}
+.card {
+    border: none;
+    border-radius: 10px;
+}
+.btn-block {
+    padding: 12px;
+    font-weight: 500;
+}
+</style>
 {% endblock %}
