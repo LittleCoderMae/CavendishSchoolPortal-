@@ -102,7 +102,7 @@ def create_demo_users():
             if not admin_user:
                 admin_user = User(
                     email='admin@cavendish.edu.zm',
-                    password_hash=generate_password_hash('admin123'),
+                    password_hash=generate_password_hash('Admin123'),
                     first_name='System',
                     last_name='Administrator',
                     role=UserRole.ADMIN
@@ -117,12 +117,12 @@ def create_demo_users():
                 demo_student = User(
                     email='student@cavendish.edu.zm',
                     password_hash=generate_password_hash('password123'),
-                    first_name='John',
-                    last_name='Doe',
+                    first_name='Mae',
+                    last_name='Nkubo',
                     role=UserRole.STUDENT,
-                    student_id='S2024001',
+                    student_id='108-518',
                     program='Computer Science',
-                    year_of_study=2
+                    year_of_study=4
                 )
                 db.session.add(demo_student)
                 db.session.commit()
@@ -134,11 +134,11 @@ def create_demo_users():
                 demo_lecturer = User(
                     email='lecturer@cavendish.edu.zm',
                     password_hash=generate_password_hash('password123'),
-                    first_name='Dr. Sarah',
-                    last_name='Johnson',
+                    first_name='Dr. Pharoll',
+                    last_name='Sinkala',
                     role=UserRole.LECTURER,
-                    staff_id='L2024001',
-                    department='Computer Science'
+                    staff_id='L1234',
+                    department='Information Technology'
                 )
                 db.session.add(demo_lecturer)
                 db.session.commit()
@@ -156,7 +156,6 @@ if __name__ == '__main__':
     print("🚀 Starting Cavendish School Portal...")
     print("📍 Access the application at: http://localhost:5000")
     print("🔑 Login URL: http://localhost:5000/auth/login")
-    print("")
     print("👤 Demo Credentials:")
     print("   Admin: admin@cavendish.edu.zm / admin123")
     print("   Student: student@cavendish.edu.zm / password123")

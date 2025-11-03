@@ -13,7 +13,7 @@ admin_bp = Blueprint('admin', __name__)
 @login_required
 def dashboard():
     if not current_user.is_admin():
-        flash('Access denied. Admins only.', 'error')
+        flash('Access denied. Admins only.')
         return redirect(url_for('auth.login'))
     
     # Get system statistics
@@ -72,7 +72,7 @@ def students():
 @login_required
 def lecturers():
     if not current_user.is_admin():
-        flash('Access denied. Admins only.', 'error')
+        flash('Access denied. Admins only.')
         return redirect(url_for('auth.login'))
     
     all_lecturers = User.query.filter_by(role=UserRole.LECTURER).all()
@@ -82,7 +82,7 @@ def lecturers():
 @login_required
 def user_detail(user_id):
     if not current_user.is_admin():
-        flash('Access denied. Admins only.', 'error')
+        flash('Access denied. Admins only.')
         return redirect(url_for('auth.login'))
     
     user = User.query.get_or_404(user_id)

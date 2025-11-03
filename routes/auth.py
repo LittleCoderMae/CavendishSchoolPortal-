@@ -89,21 +89,21 @@ def register():
             flash('Passwords do not match.', 'error')
             return render_template('auth/register.html')
 
-        if len(password) < 6:
-            flash('Password must be at least 6 characters long.', 'error')
+        if len(password) < 8:
+            flash('Password must be at least 8 characters long.', 'error')
             return render_template('auth/register.html')
 
         if User.query.filter_by(email=email).first():
-            flash('Email already exists.', 'error')
+            flash('Email already exists.')
             return render_template('auth/register.html')
 
         # Role-specific validations
         if role == 'student' and not program:
-            flash('Please select a program for student registration.', 'error')
+            flash('Please select a program for student registration')
             return render_template('auth/register.html')
 
         if role == 'lecturer' and not all([staff_id, department]):
-            flash('Please fill in all lecturer details.', 'error')
+            flash('Please fill in all lecturer details.')
             return render_template('auth/register.html')
 
         # --- User creation with single model ---
@@ -132,14 +132,14 @@ def register():
             db.session.add(user)
             db.session.commit()
             
-            flash('Registration successful! Please login.', 'success')
+            flash('Registration successful! Please login.')
             return redirect(url_for('auth.login'))
 
         except ValueError:
             flash('Invalid role selected.', 'error')
         except Exception as e:
             db.session.rollback()
-            flash(f'Error during registration: {str(e)}', 'error')
+            flash(f'Error during registration: {str(e)}')
 
     return render_template('auth/register.html')
 
@@ -150,7 +150,7 @@ def register():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.', 'info')
+    flash('You have been logged out.')
     return redirect(url_for('auth.login'))
 
 # ------------------------------------------------------------
@@ -171,12 +171,12 @@ def create_demo_users():
         student_user = User(
             email='student@cuz.ac.zm',
             password_hash=generate_password_hash('password123'),
-            first_name='John',
-            last_name='Smith',
+            first_name='mervis',
+            last_name='Mae',
             role=UserRole.STUDENT,
             program='Computer Science',
-            year_of_study=2,
-            student_id='S000001'
+            year_of_study=4,
+            student_id='108-518'
         )
         db.session.add(student_user)
 
@@ -184,10 +184,10 @@ def create_demo_users():
         lecturer_user = User(
             email='lecturer@cuz.ac.zm',
             password_hash=generate_password_hash('password123'),
-            first_name='Dr. Sarah',
-            last_name='Johnson',
+            first_name='Dr.Cephas',
+            last_name='Zulu',
             role=UserRole.LECTURER,
-            staff_id='L000001',
+            staff_id='L1234',
             department='Computer Science'
         )
         db.session.add(lecturer_user)
